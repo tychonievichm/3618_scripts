@@ -57,5 +57,3 @@ v[7]
 # head(v, 3)
 # Figure out what each of these does when applied to other lists and with
 # other index values.
-
-# vectors of strings and operations tktktktkt
