@@ -78,3 +78,33 @@ B
 
 # Exercise. Try out the following functions on B: rowSums(), colSums(),
 # sum(), and the same functions with "sum" replaced by "mean".  What happens?
+
+# Manipulating existing matrices
+
+# it will often be the case that you will want to add an extra row or column to
+# an existing matrix, perhaps due to additional time increments or extra data
+# becoming available.  We'll do that with two functions, rbind() and cbind().
+# First we'll add a column with some new data:
+A <- cbind(A, c(4,4))
+A
+
+# The new column doesn't have a name, so we should fix that.  But look at the
+# sort of problem that might occur:
+colnames(A)[3] <- "weight"
+A
+A[ ,"weight"]
+
+# That was a potentially ugly mistake, but it's easy to fix:
+colnames(A)[3] <- "limbs"
+A
+
+# Now we'll add a row, representing a new data point.  This time we will set
+# set the row name as the row is attached instead of afterward.  Notice how
+# the way the way the matrix is displayed changes due to the numbers in the
+# new row!
+A <- rbind(A, beetle=c(0.4, 0.003, 6))
+A
+
+# Exercise.  I gave the weight of a beetle as .003, but it turns out that that
+# is about four times the average weight of the species of beetle in question.
+# Rewrite that entry of the matrix.
