@@ -27,10 +27,58 @@ for (time in 1:10) {
 }
 amount
 
-# Exercise.  If each of these represents the amount in the account after so many
-# time periods have passed, when in each time period was the interest applied?
-# Make a script that  performs the same sort of calculation, but with the
-# interest calculated at a different time in each time period.
+# The output format isn't perfect, but it's definitely good enough to see what
+# is going on
 
+# Exercise.  Write a script that compounds interest every two periods, using a
+# rate of 0.08.  Have it display account values for all time periods, but the
+# value should only change on even-numbered periods.  Add the column you
+# generate to the right of the one from the example.  Hint: look at the values
+# of time %% 2 in the above loop and use an if statement or some clever
+# arithmetic.
+
+
+# I mentioned that "for" loops are safer than other loop constructs, and now I
+# will explain why.  The reason comes down to one fact: a for loop can only
+# go through the iteration list it was given at the start, and then it will stop
+# its operation.  This means that, at least taken by itself, a for loop will
+# not introduce an infinite loop into your script.  The other loop types are
+# very much able to do this!
+
+# CAUTION: some of the following scripts may cause your interpreter to become
+# locked into an unending loop.  Either use the Esc key or Ctrl+C when the
+# window has focus to stop this.
+
+# while loops
+# In some circumstances it is useful to have an operation that repeats until
+# some condition is satisfied, instead of until a certain number of iterations
+# have been completed.  This is the situation in which a while loop is useful.
+# I will use a while loop to calculate the number of payments needed to pay off
+# a mortgage loan of $200,000 with 0.3% interest charged per month and a
+# monthly payment of $1,500.  In this case, the condition I am looking for is 
+# "while I still owe money"
+
+num_payments <- 0
+owed <- 200000.00
+interest <- 0.003
+payment <- 2000
+
+while (owed > 0) {
+  owed <- owed * (1 + interest)
+  owed <- owed - payment
+  num_payments <- num_payments + 1
+  print(owed)
+}
+final_payment = payment + owed
+cat("I will make", num_payments - 1, "payments of", payment,
+    "with one final payment of", final_payment, ". ",
+    "Paying off this loan will take", num_payments/12, "years.\n")
+
+# Notice how I placed a message at the end to explain what the calculation's
+# results actually mean!
+
+# Exercise.  Change the size of payment and see what happens to the length of
+# time it takes to pay off the loan.  What happens if you set payment to 575?
+# You may want to remove or alter the "print(owed)" line for this.
 
 # while loop, contine, break, repeat/break

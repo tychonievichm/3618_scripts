@@ -1,0 +1,44 @@
+---
+title: "03 - Vectors"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+###Vectors: R's default kind of "list"
+
+It is often useful to store series of numbers in a list so that they can all be
+processed and moved together, using a nice naming scheme.  The default way that
+R does this is by forming a vector.  **CAUTION: All numbers in a single vector must be of the**
+**same type!**  If you form a vector with different data types, R will coerce
+all of the data according to the rule given in the previous notebook.  This
+usually won't be a problem, but beware placing a character string in a vector
+with numbers!  The simplest way to form a vector from numbers that you happen
+to have lying around is to use the _c()_ function.
+
+```{r}
+x <- c(1, 5, 7)
+x
+y <- c("a", 5, 7, 3)
+y
+```
+
+Note that the numerical values gained quotation marks in the second vector.
+This indicates that they are no considered to be character strings by R and
+not numerical values.  R does this so that each vector has a single format
+associated with it, meaning that it can save on memory by not having to remember
+the format of each entry individually.  It also means that R does not have to
+think as much about how to combine two vectors together using arithmetic
+operations.  This matters a lot when dealing with
+very large data sets, even if it is somewhat of a hassle now.  
+
+If you really want to get a list
+of values with different types, use the _list()_ function as you would use the
+_c()_ function.  Lists are more flexible in terms of storing data, but none of
+arithmetic operations below work easily with them.  I will try to avoid using
+lists whenever possible.
+
+###Vector arithmetic
+
+Vectors can be combined in R in several ways.  The general rule to remember is
+that R will combine vectors entry-by-entry unless it can't or you go out of your
+way to ask for something else.

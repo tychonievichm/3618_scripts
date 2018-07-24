@@ -1,0 +1,206 @@
+---
+title: "01 - Calculation"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+### Calculator operations
+
+To get you used to using R, I will start by showing you how to use R to turn
+your computer into a fancy calculator.  We'll use RStudio's notebook feature.
+To run code in the notebook, you can click the green arrow in the upper right
+hand corner of the code cell or press Ctrl+Shift+Enter on your keyboard.  Let's
+start with some simple arithmetic:
+
+```{r}
+2 + 2
+3 + 5
+5 / 7
+5 ^ 4
+9 + 7
+2*pi / 6
+```
+
+Notice how the outputs come out in the order that they were entered into the
+console.  You can ask R to evaluate very complicated expressions if you like;
+use parentheses to force your preferred order of operations.
+
+```{r}
+((2 + 5/8)^(2/3))*9
+```
+
+There are some other arithmetic operations that you will want to remember:
+
+#### _a %% b_: residue of _a_ modulo _b_
+
+This is the remainder you get when you divide _a_ by _b_, taken as a number
+between _0_ and _b_.  The inputs and outputs to this do not have to be integers,
+but the **quotient** (that you don't see) does.  This operation will be very
+handy when we want to have a program model events that happen with some regular
+frequency that is not "every time period."  In math, this residue is always
+positive, so be careful when moving from one subject to another.
+
+```{r}
+10 %% 3
+3 %% 5
+10 %% pi
+10 %% -pi
+```
+
+#### _a %/% b_: integer quotient of _a_ divided by _b_
+
+This divides _a_ by _b_, leaving the result as an integer.  It takes the largest
+integer _q_ so that $q \cdot b < a$ as long as _b_ is positive, and it does
+something similar if _b_ is negative.
+
+```{r}
+10 %/% 3
+10 %/% -3
+2.2 %/% 1.2
+```
+
+There is a relationship between _%%_ and _%/%_ called quotient-remainder that
+you should remember: _a = b*(a %/% b) + (a %% b)_.  Let's try it out:
+
+```{r}
+3*(10 %/% 3) + (10 %% 3)
+(-3)*(10 %/% -3) + (10 %% -3)
+pi*(4.3 %/% pi) + (4.3 %% pi)
+```
+
+
+### Variables
+
+You'll often want to store a number or other object for later use.  R does this
+by assigning a value to a variable.  There are two different ways to do this in
+R, as follows:
+
+```{r}
+x = 57
+x
+y <- 33
+y
+```
+
+The preferred way to make assignments in R is with the arrow operator (<-), but
+the equality symbol _usually_ does the same thing.
+
+By default, R will not print any output to the console when you make a variable
+assignment, you will need to do something if you want to see the number that
+you you just saved a reference to.  Here are three ways to make this happen:
+
+```{r}
+x = 57
+print(x)
+y <- 33
+y
+(z <- 31)
+```
+
+When assigning values to variables, you can make references to other variables
+that you already assigned.  You'll see these variables and a summary of their
+values in your "Environment" window.
+
+```{r}
+x <- 57
+y <- 33
+z <- x + y
+print(z)
+
+```
+
+It is completely fine to go back and change the value of a variable that you
+previously defined, but realize that this will not change the values of
+any variables that you used the first variable to define:
+
+```{r}
+x <- 57
+y <- 33
+z <- x + y
+print(z)
+x <- 0
+print(z)
+
+```
+
+I useful consequence of this is that you can redefine a variable in a way that
+uses its current value.  When this happens, the old value is effectively
+removed and a new value replaces it.  _It is better to think of variables as
+names for storage sites for your data rather than as names for the data
+themselves_.
+
+```{r}
+x <- 57
+print(x)
+x <- x^2
+print(x)
+
+```
+
+### Built-in functions
+
+As with a graphing calculator, R comes with a large number of useful
+mathematical functions already built in.  It would be unreasonable to list them
+here, so I will go over some of the most important examples
+
+####Logarithms
+
+To access logarithm functions, you may use the _log()_ function.  In R, the
+default base for _log()_ is _e_.  If you want to use another base, you must
+explicitly say so through the use of what is known as a keyword argument, or
+"kwarg".  To
+specify a keyword argument for the keyword "base" that determines the base of
+the logarithm, you must include a statement that begins with "base = " on your
+list of inputs to the function.  Since _log()_ only takes one keyword argument,
+it is actually okay to omit the explicit mention of the "base" input, but it is
+good practice for dealing with more complicated functions that may involve
+multiple keyword arguements, only a few of which you want to actually change
+from the default values.  Which of the ways of calling for the base-10 logarithm
+is easier for you to read?
+
+```{r}
+log(10)
+log(10, base = exp(1))
+log(10, base = 10)
+log(10, 10)
+
+```
+
+####Square root
+
+To take a square root, either use ^ or the _sqrt()_ function.  There is no
+guarantee that these will calculate the square root in the same way, but that
+shouldn't be an issue.
+
+```{r}
+sqrt(5)
+5^(0.5)
+5^(1/2)
+
+```
+
+####Rounding
+
+There are many ways of taking a number and getting a "nearby" integer in R.
+Here are a few examples:
+
+```{r}
+x = 3.4
+round(x)
+ceiling(x)
+floor(x)
+trunc(x)
+as.integer(x)
+```
+
+Note that with computers, numerical values involving decimals are almost never
+recorded exactly.  This means that these operations may not always do exactly
+what you expected when it comes to input values near where the functions change
+values abruptly.  Both of the following two numbers should both be just slightly
+larger than 1, and so _ceiling()_ should give value 2 in both cases.
+
+```{r}
+ceiling(1 + 1*10^(-15))
+ceiling(1 + 1*10^(-16))
+
+```
