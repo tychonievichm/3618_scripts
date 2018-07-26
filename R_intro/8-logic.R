@@ -11,7 +11,6 @@
 5 == 1 + 4
 3 == 3 + 1
 3 == "a"
-
 # To negate an equality, you can instead write "!=" (visualize this as a line
 # drawn through the equals sign)
 5 != 1 + 4

@@ -1,0 +1,137 @@
+---
+title: "05 - Logic"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+### Toward automation
+
+When doing computations, there are a lot of operations that need to be done
+repetitively.  To avoid this tedium, you are going to have to tell your
+computer how it is to move from one task to the next another without waiting
+for you to spell everything out.  At every moment, the computer will need to be
+able to figure out what is happening now and use that information to decide
+what to do next.
+
+Let's start by looking at how we can ask the computer to get the information
+it will need to make the decisions we tell it to make.
+
+### Relations
+
+R has a number of "information-gathering" functions already built in.  Some
+of these functions yield up information about single objects, while others
+look at how two or more objects relate to each other.  What these functions
+all have in common is that they can be thought of as functions that answer
+questions for which the only answers are something like "yes" and "no".
+As implemented, each of these functions will always give back one of two values: 
+TRUE or FALSE, the two objects of class logical.  Here is an example:
+
+```{r}
+x <- 5
+is.logical(x)
+```
+
+In this example, I wanted to know something about the class of the number
+stored as _x_.  Instead of asking R to tell me the class, I just asked it to
+tell me if the class of x is "logical".  There are many properties that you can
+access through _is_, but these properties may not be the ones you care about
+initially.
+
+### Numeric relations
+
+The relations that you are probably used to dealing with in math class are
+some special relations that compare the values or numbers, such as the
+relations of "equals" and "less than".  R has special Boolean functions devoted
+to just this sort of relation.
+
+#### Equations
+
+To ask if two objects are equal, you can use the following syntax:
+
+```{r}
+5 == 1 + 4
+3 == 3 + 1
+3 == "a"
+"a" == "a"
+```
+
+Notice that I had to use two "equals" signs to signify that I wanted a logical
+value.  If I had just put one equals sign, R would have thought I wanted to
+assign a value to one of the variables!  This produces an error when you ask
+to, say, assign the value 4 to 3, but it may not give you an error if your
+equations involve variables!
+
+To ask if two objects are *not* equal, use a single "equals"" sign preceded by an
+exclamation point.  Think of this as an attempt to draw a line through the
+"equals" sign.
+
+```{r}
+5 != 1 + 4
+3 != 3 + 1
+3 != "a"
+"a" != "a"
+```
+
+#### Inequalities
+
+When working with numbers, you will often want to say when one of a pair of
+numbers is larger.  You can do this using the usual inequality symbols, 
+"less than"(<)
+
+```{r}
+5 < 5
+5 < 4
+4 < 5
+```
+
+and "greater than (>)"
+
+```{r}
+5 > 5
+5 > 4
+4 > 5
+```
+
+As you just saw, these symbols are for strict inequalities.  For weak
+inequalities, _i.e._ ones that should be true if the same number is given twice,
+use the following syntax for "less than or equal to"
+
+```{r}
+5 <= 5
+5 <= 4
+4 <= 5
+```
+
+and "greater than or equal to"
+
+```{r}
+5 >= 5
+5 >= 4
+4 >= 5
+```
+
+The general rule to remember here is that the "equals" symbol is involved in
+a comparison, it has to be the second one.
+
+### Boolean functions
+
+It will often be the case that you want to ask R to check on multiple
+relations at the same time.  Perhaps you want something to happen when R
+sees that the value assigned to x is between 0 and 1, but not 0.5.  For this
+purpose, R has some functions built into it that act directly on logical values.
+The four such functions are "and"(&), "or"(|), "not"(!), and "exclusive or"
+(xor()).
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
