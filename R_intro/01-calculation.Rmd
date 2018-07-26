@@ -143,7 +143,7 @@ As with a graphing calculator, R comes with a large number of useful
 mathematical functions already built in.  It would be unreasonable to list them
 here, so I will go over some of the most important examples
 
-####Logarithms
+#### Logarithms
 
 To access logarithm functions, you may use the _log()_ function.  In R, the
 default base for _log()_ is _e_.  If you want to use another base, you must
@@ -166,7 +166,7 @@ log(10, 10)
 
 ```
 
-####Square root
+#### Square root
 
 To take a square root, either use ^ or the _sqrt()_ function.  There is no
 guarantee that these will calculate the square root in the same way, but that
@@ -179,7 +179,7 @@ sqrt(5)
 
 ```
 
-####Rounding
+#### Rounding
 
 There are many ways of taking a number and getting a "nearby" integer in R.
 Here are a few examples:

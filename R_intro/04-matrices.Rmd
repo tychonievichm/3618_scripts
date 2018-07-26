@@ -4,245 +4,222 @@ author: Michael Tychonievich, Ph.D.
 output: html_notebook
 ---
 
-###Matrices: R's default kind of "numerical array"
+### Matrices: R's default kind of "numerical array"
 
-Sometimes it is useful to have numerical data arranged in "spreadsheet" format
-instead of as a linear list.  
-
-It is often useful to store series of numbers in a list so that they can all be
-processed and moved together, using a nice naming scheme.  The default way that
-R does this is by forming a vector.  **CAUTION: All numbers in a single **
-**matrix must be of the same type!**  If you form a matrix with different data
-types, R will coerce
-all of the data according to the rule given in the previous notebook.  This
+Often it is useful to have numerical data arranged in "spreadsheet" format
+instead of as a linear list.  The most primitive way of doing this in R is by
+recording the data in a matrix.  A matrix in R is essentially a vector with
+extra information indicating how data is to be organized into rows and columns.
+**CAUTION: All numbers in a single **
+**matrix must be of the same type!**  
+If you place data of different types in the same matrix, then all entries will
+be coerced into the most general data type present, just like with standard
+vectors.  As with vectors, this
 usually won't be a problem, but beware placing a character string in a vector
-with numbers!  The simplest way to form a vector from numbers that you happen
-to have lying around is to use the _c()_ function.
+with numbers!  The simplest way to form a matrix from numbers that you happen
+to have lying around is to use the _matrix()_ functionon a vector.  This
+function is a bit more complicated to use than _c()_, so it's a good idea to
+read some of R's internal documentation.
 
 ```{r}
-x <- c(1, 5, 7)
-x
-y <- c("a", 5, 7, 3)
-y
+?matrix
 ```
 
-Note that the numerical values gained quotation marks in the second vector.
-This indicates that they are no considered to be character strings by R and
-not numerical values.  R does this so that each vector has a single format
-associated with it, meaning that it can save on memory by not having to remember
-the format of each entry individually.  It also means that R does not have to
-think as much about how to combine two vectors together using arithmetic
-operations.  This matters a lot when dealing with
-very large data sets, even if it is somewhat of a hassle now.  
-
-If you really want to get a list
-of values with different types, use the _list()_ function as you would use the
-_c()_ function.  Lists are more flexible in terms of storing data, but none of
-arithmetic operations below work easily with them.  I will try to avoid using
-lists whenever possible.
-
-###Vector arithmetic
-
-Vectors can be combined in R in several ways.  The general rule to remember is
-that R will combine vectors entry-by-entry unless it can't or you go out of your
-way to ask for something else.
+There are three different functions listed in the file, and the one you want
+is the first one that creates a matrix from given values.  If you just use the
+matrix function on a vector, it adds some structure to the vector.
 
 ```{r}
-x <- c(1, 5, 7)
-y <- c(2, 1, 5)
-x + y
-x * y
-x ^ y
+x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+M_0 <- matrix(x);M_0
 ```
 
-When you perform arithmetic operations involving vectors of different lengths,
-R will do its best to match the sizes and then perform the operation.  This
-means that the smaller vector will be combined to itself until it is as long
-as the other vector, and then the operation will take place.
+Notice that the output here looks a lot like the vector _x_, but all of the
+entries are listed in a column rather than in a row.  Over in the Environment
+pane of RStudio, you can see how _M_0_ is different.  After _x_, you see that R
+tells you that _x_ is "num [1:10]", to say that _x_ has a numeric class and
+entries with indices 1 through 10.  After _M_0_, you see something similar: 
+"num [1:10, 1]".  This tells you that _M_0_ is has a numeric class, and that it
+is a rectangular array with 10 rows and 1 column.  When you make a matrix, you
+can actually set these numbers!
+
+Under usage, we are told what information the matrix function needs to form
+its output.  All of the aruguments given are keyword arguments (kwargs)
+with default values given.  To form a matrix from data that we have using
+this function, we will need to know a few things: the data that we want to
+put in the matrix (this will be a numerical vector, for now), either a number
+of rows or columns to coerce the matrix to have, a decision about whether
+"yrow should be TRUE or FALSE (this determines how the vector is laid out
+in the matrix), and finally descriptive names for the row and column
+dimensions if needed.  Let's make matrices from that vector that have different
+shapes by specifying the value of the keywords nrow and ncol:
 
 ```{r}
-x <- c(1, 5, 7)
-z <- c(2, 1, 5, 6, 3, 9, 1, 1, 1)
-x * z
-z * x
+x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+M_1 <- matrix(x, nrow=2);M_1
+M_2 <- matrix(x, ncol=2);M_2
 ```
 
-In particular, this works well with scalar addition and multiplication, as long
-as you remember that adding a single number to a vector adds it to every entry
-of the vector separately.
+Notice that specifying either the number of rows or the number of columns is
+enough to determine the matrix, so you need not specify both (and you should
+not do it either, unless you have a good reason).  Look at what happens if try
+to attach multiplie specifications:
 
 ```{r}
-x <- c(1, 5, 7)
-a <- 2
-x + a
-x * a
+x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+M_3 <- matrix(x, ncol=2, nrow=2);M_3
+M_4 <- matrix(x, nrow=2, ncol=2);M_4
 ```
 
-If the length of the smaller vector does not divide the length of the longer
-vector evenly, you will get an error message.  If you accidentally combine
-vectors of different lengths, it is important to remember that sometimes R will
-throw back an error, and sometimes R will act by making compies of the smaller
-vector and then combine the resulting vectors as you asked!  You can go ahead
-and check the length of the vector with the _length()_ function if you like.
+By default, R wants to arrange your matrix so that the generating vector first
+runs down the first column, then the second, and so on, until the matrix is
+fully formed.  If you want to change this, you can use the byrow keyword
 
 ```{r}
-x <- c(1, 5, 7)
-z <- c(2, 1, 5, 6, 3, 9, 1, 1)
-length(x)
-length(z)
+x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+M_5 <- matrix(x, nrow=2, byrow=TRUE);M_5
+M_6 <- matrix(x, ncol=2, byrow=TRUE);M_6
 ```
 
-###Combining vectors
+### Giving a matrix names
 
-If you want to combine two vectors into a single longer vector, the _c()_
-function handles that as well.  Notice that the order of the vectors in the
-argument list matters.
+Just like with a vector, you can add names to a matrix.  There is a difference,
+however: the names are associated with the rows and columns of the matrix
+instead of the entries individually.  Let's make a named matrix using the
+dimnames keyword argument.  The documentation for the _matrix()_ function says
+that dimnames has to be a list of length 2, which means that a list has to be
+defined!  You can do this with the _list()_ function.
 
 ```{r}
-x <- c(1, 5, 7)
-z <- c(2, 1, 5, 6, 3, 9, 1, 1)
-c(z, x)
-c(x, z)
+rownames = c("monkey", "tiger")
+colnames = c("height", "weight")
+dimnames = list(rownames, colnames)
+animal <- matrix(c(2, 3, 60, 620), nrow=2, dimnames=dimnames)
+animal
 ```
 
-###Vector indices
+I did something a little bit strange there: I gave the list I wanted to use the
+same name as the keyword that was supposed to represent it.  Despite this, R
+didn't want to automatically grab my list and use it in the _matrix()_ function;
+I had to explicitly tell it that my list was the correct one to use.  That's
+what I did when when I wrote "dimnames=dimnames" as my keyword argument: I told
+R to use the list that I named "dimnames" as the list used internally by the
+_matrix()_ function, coincidentally also named "dimnames".  If I hand't done
+that, then R would have used the _matrix()_ function's default internal value
+for dimnames, which is NULL.
 
-The _c()_ function works great when it comes to joining two vectors together,
-but it obviously cannot handle pulling out pieces of a longer vector.  R has
-a completely different syntax for this, using indices.  In a vector, each of the
-various entries each get an integer index (a name or label) associated with it.
-The first element of the vector gets the index 1, and the index goes up by one
-for each entry you move to the right.  You can access the entry with index _i_
-of the vector _z_ by typing _z[i]_.
+### Matrix "slicing"
 
-```{r}
-z <- c(2, 1, 5, 6, 3, 9, 1, 1)
-z[1]
-z[2]
-c(z[3], z[5])
-z[9]
-```
+You can now create matrices from data, but there will be times when you want to
+get that data back out in pieces.  Because matrices have more structure than
+vectors, it should make sense that there are more powerful ways of doing this.
 
-For that last entry, R gave back a new sort of value, NA.  This value indicates
-that R was unable to find any data at that index, but it leaves open the
-possibility that the number exists while R just doesn't know what the number's
-value is.  Think of it as R's indicator for "missing" data.  This is not the
-same as R's NULL object, which indicates that data is actually nonexistent.
-
-We can change the entries of a vector using this notation as well.  Doing so
-will have a similar affect to reassigning the vector, in that it won't change
-any data that you already computed from the old version of the vector.  On the
-other hand, it involves less use of computer resources than completely
-remaking the vector, which can matter when dealing with large data sets and
-multi-stop algorithms.  You can even change a value to NA!
-
-```{r}
-z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
-z[1] <- 3; z
-x <- c(1, 5, 7); x
-x[2] <- NA; x
-```
-
-###Vector "slicing"
-
-If you want to grab a subset of the entries of a vector, it is possible to
-get them by using indices explicitly.  Since this sort of operation is so
-commonly used, R has some shortcuts in place to take "slices" out of a vector.
-You do this by merely listing the indices of the entries that you want, in the
-order that you want them.
-
-```{r}
-z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
-z[c(1, 2, 3)]
-z[c(4, 8)]
-z[c(9, 8, 7, 6)]
-```
-
-For certain commonly requested slices, R has syntax to make the requests even
-faster.  The most useful of these is the colon function, which generates lists
-of numbers in arithmetic progression.  Here are some examples:
-
-```{r}
-1:10
-10:1
-2:5
-5:2
-```
-
-When the larger number is on the right, the colon function produces a vector
-of numbers that increase by 1 each time you move to the right, until doing so
-would exceed the larger number.  If the larger number is on the right, the
-colon function does the same thing, but it decreases by 1 each time you move
-an entry to the right.  It works this way even if the numbers you give are not
-integers.
-
-```{r}
-2.5:5.2
-5.2:2.5
-```
-
-If you want all of the entries of a vector with indices 3 through 7, you can
-just use colon to ask for them:
-
-```{r}
-z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
-z[3:7]
-```
-
-R has other ways of slicing up vectors that you may find useful.  These include
-the _head()_ and _tail()_ functions, as well as the use of negative indices.
-
-###Naming the entries of a vector
-
-When raw data is imported to R from an outside source, it is fairly common that
-individual numbers are known by a name rather than an index value.  Due to this,
-R has a fairly simple way of giving the entries of a vector descriptive names
-in addition to numerical indices using the _names()_ function.  This function
-is different than functions that we have seen so far because it is really
-just a way of accessing a special property of your vector.  Be careful when you
-combine named vectors, as the names may change in ways that you do not expect.
-
+First, you can get a single entry out of a matrix.  You can do this by using
+indices or names.  When you ask for a single entry of a matrix, you should 
+typically give both an indication of which row and also which column you want
+the entry taken from.  It turns out that R still thinks of the matrix as being
+a vector, to the point that you can still ask for and receive the entries of
+the matrix by using a single index number.  Be careful with this!
 
 
 ```{r}
-x <- c(1, 5, 7)
-names(x) <- c("A", "B", "C"); x
-
-y <- c(1, 2, 5)
-names(y) <- c("monkey", "1", "wow"); y
-
-x + y
-y + x
+animal[1]
+animal[1, 2]
+animal["monkey", "weight"]
 ```
+
+You can specify multiple names or indices by using vectors of indices if you
+want to receive more information.  The output may not be formatted exactly how you would expect, however.  Tip: if you leave an index or name value blank, but you
+make sure to leave the correct number of commas in your specification, R will
+interpret the blank to mean "all possible values".  This can be a great way to
+get entire rows or columns at once.
 
 ```{r}
-x <- c(1, 5, 7)
-names(x) <- c("A", "B", "C"); x
-x + 1:3
-x + 1:6
+animal[1, c(1, 2)]
+animal[c("monkey", "tiger"), "weight"]
+animal["tiger", ]
+animal[ , "weight"]
+animal[ , ]
 ```
 
-By default, R records that the names of the entries of your vector are NULL,
-meaning that they do not exist.  If you name one of the entries, R will decide
-that the others should be given names that are NA, meaning that they are
-unknown.  If you set the names of your vector to NULL, then R goes back to
-believing that the vector's entries should have no names.
+### Tacking on rows or columns
+
+With vectors, you could combine two vectors one after tha other using the _c()_
+function.  An analogue of this for matrices is tacking on an extra row or
+column to the matrix.  The functions that do these oeprations are _cbind()_ and _rbind()_.  Let's bind an extra column to the _animal_ matrix and give it a
+name:
 
 ```{r}
-x <- c(1, 5, 7); x
-names(x) <- c("A", "B", "C"); x
-names(x) <- NULL;x
+animal <- cbind(animal, c(4,4))
+colnames(animal)[3] <- "weight"
+animal
+animal[ , "weight"]
 ```
 
-Once entries are named, you can pull them out by using those names just like
-you did with indices
+Oops!  I gave the new column the same name as one of the old ones, and now
+I can't access the third column using its name.  Let's fix that.
 
 ```{r}
-x <- c(1, 5, 7); x
-names(x) <- c("A", "B", "C"); x
-x[c("C", "A")]
-x[c(3, 1)]
+colnames(animal)[3] <- "limbs"
+animal
+```
+
+Now let's use _rbind()_ to tack on a new row.  Since the matrix now has three
+columns, this new row must have three entries.  This time, I will name the row
+using _rbind()_ directly instead of _rownames()_ after the row is already added.
+The syntax for this looks very similar to the syntax for using kwargs, so be
+very careful if you decide to use this method.
+
+```{r}
+animal <- rbind(animal, beetle=c(0.4, 0.003, 6))
+animal
 
 ```
 
+And now it turns out that I used the wrong number for beetle weight.  To change
+it, I first have to figure out how to access that entry of the matrix
+individually.  Here are the three ways I showed you to do that:
 
+```{r}
+animal["beetle", "weight"]
+animal[3, 2]
+animal[6]
+
+```
+
+Now we just have to use one of these methods to put in a new value for the
+weight of the beetle.
+
+```{r}
+animal["beetle", "weight"] = 0.0008
+animal
+animal[3, 2]
+animal[6]
+
+```
+
+I used the row and column names to change the value in that entry, but you can
+see that the other two methods of getting to the value in the beetle-weight
+entry both give back the new value instead of the old one.
+
+### Matrix arithmetic
+
+Matrix arithmetic works similarly to vector arithmetic by default: arithmetic
+operations are entry-by-entry by default.  If you want everything to go well,
+make sure that the matrices you combine are the same size and expect that your
+names might get mangled a bit.
+
+```{r}
+A <- matrix(1:4, nrow=2);A
+dim(A)
+B <- matrix(1:4, nrow=2, byrow=TRUE);B
+dim(B)
+A + B
+A * B
+A ^ B
+A %% B
+```
+
+If you want to perform matrix multiplication or other operations that you saw
+in your linear algebra class, you will need to use other syntax.  I won't
+cover any of that here.

@@ -4,7 +4,7 @@ author: Michael Tychonievich, Ph.D.
 output: html_notebook
 ---
 
-###Vectors: R's default kind of "list"
+### Vectors: R's default kind of "list"
 
 It is often useful to store series of numbers in a list so that they can all be
 processed and moved together, using a nice naming scheme.  The default way that
@@ -38,7 +38,7 @@ _c()_ function.  Lists are more flexible in terms of storing data, but none of
 arithmetic operations below work easily with them.  I will try to avoid using
 lists whenever possible.
 
-###Vector arithmetic
+### Vector arithmetic
 
 Vectors can be combined in R in several ways.  The general rule to remember is
 that R will combine vectors entry-by-entry unless it can't or you go out of your
@@ -89,7 +89,7 @@ length(x)
 length(z)
 ```
 
-###Combining vectors
+### Combining vectors
 
 If you want to combine two vectors into a single longer vector, the _c()_
 function handles that as well.  Notice that the order of the vectors in the
@@ -102,7 +102,7 @@ c(z, x)
 c(x, z)
 ```
 
-###Vector indices
+### Vector indices
 
 The _c()_ function works great when it comes to joining two vectors together,
 but it obviously cannot handle pulling out pieces of a longer vector.  R has
@@ -140,7 +140,7 @@ x <- c(1, 5, 7); x
 x[2] <- NA; x
 ```
 
-###Vector "slicing"
+### Vector "slicing"
 
 If you want to grab a subset of the entries of a vector, it is possible to
 get them by using indices explicitly.  Since this sort of operation is so
@@ -189,7 +189,7 @@ z[3:7]
 R has other ways of slicing up vectors that you may find useful.  These include
 the _head()_ and _tail()_ functions, as well as the use of negative indices.
 
-###Naming the entries of a vector
+### Naming the entries of a vector
 
 When raw data is imported to R from an outside source, it is fairly common that
 individual numbers are known by a name rather than an index value.  Due to this,
