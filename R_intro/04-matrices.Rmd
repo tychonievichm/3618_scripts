@@ -1,15 +1,18 @@
 ---
-title: "03 - Vectors"
+title: "04 - Matrices"
 author: Michael Tychonievich, Ph.D.
 output: html_notebook
 ---
 
-###Vectors: R's default kind of "list"
+###Matrices: R's default kind of "numerical array"
+
+Sometimes it is useful to have numerical data arranged in "spreadsheet" format
+instead of as a linear list.  
 
 It is often useful to store series of numbers in a list so that they can all be
 processed and moved together, using a nice naming scheme.  The default way that
 R does this is by forming a vector.  **CAUTION: All numbers in a single **
-**vector must be of the same type!**  If you form a vector with different data
+**matrix must be of the same type!**  If you form a matrix with different data
 types, R will coerce
 all of the data according to the rule given in the previous notebook.  This
 usually won't be a problem, but beware placing a character string in a vector
