@@ -1,0 +1,12 @@
+---
+title: "07 - Control: loops"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+### More automation
+
+
+```{r}
+
+```

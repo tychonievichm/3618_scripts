@@ -120,18 +120,117 @@ relations at the same time.  Perhaps you want something to happen when R
 sees that the value assigned to x is between 0 and 1, but not 0.5.  For this
 purpose, R has some functions built into it that act directly on logical values.
 The four such functions are "and"(&), "or"(|), "not"(!), and "exclusive or"
-(xor()).
+(xor()).  Since each can only take two inputs that each can only have two
+values, it's possible to write out what each function does completely.  Here is
+how you can do so in a formate known as a "truth table":
 
 ```{r}
-
+col_1 <- c(TRUE, TRUE, FALSE, FALSE)
+col_2 <- c(TRUE, FALSE, TRUE, FALSE)
+col_3 <- c(TRUE & TRUE, TRUE & FALSE, FALSE & TRUE, FALSE & FALSE)
+col_names <- c("P", "Q", "P&Q")
+truth_table <- matrix(c(col_1, col_2, col_3), ncol=3)
+colnames(truth_table) <- col_names
+truth_table
 ```
+
+As you can see, P&Q evaluates to TRUE exactly when both P and Q evaluate to
+TRUE, so you can use the "and" function to tell when two different conditions
+are satisfied.  You can also string together applications of "and" to create
+more complicated conditions.
+
+```{r}
+TRUE & TRUE & TRUE & TRUE
+```
+
+#### With vectors and matrices
+
+With some effort, logical expressions can be used in place of indices when
+slicing up vectors and matrices.  This can actually make your code much simpler
+once you get used to how it works, though at first it can be quite
+challenging.  This method relies on two facts about how R deals with typical
+relations and Boolean functions.  
+
+First, many times when R is asked to
+perform a comparison on a vector or matrix, it will do it entry by entry instead
+of for the entire vector at matrix at once.  Then the output will come back
+as a matrix or vector of the same shape as the one you were working with
+originally.  This works a lot of the time, but you should check if you ever
+start working with new relations.
+
+```{r}
+x = c(2, 5, 8, 1)
+x > 3
+A = matrix(x, nrow=2)
+A > 3
+```
+
+Second, when a logical vector or matrix is used in place of indices, R will hand back
+a vector of things that show up in the same places as any TRUE values in the
+logical vector or matrix.  The logical vector or matrix used should be the same size as the vector or matrix you are using it with to make this work well.
+
+```{r}
+x = c(2, 5, 8, 1)
+x[c(TRUE, TRUE, FALSE, FALSE)]
+A = matrix(x, nrow=2)
+L = matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
+A[L]
+```
+
+Notice again that the output here was a vector in both cases, so this method
+of pulling elements out of a matrix does not naturally give you a matrix of any
+sort, let alone one with whatever size you need.
+
+If your goal is to get a matrix back, perhaps with some of the entries removed,
+you have to be a little clever.  Because R will interpret coerce TRUE to the
+numeric value 1 and FALSE to the numeric value 0 if you attempt to treat
+logical values as numeric values, you can use multiplication by logicals as a
+way to "slice" a vector or matrix.
+
+```{r}
+x = c(2, 5, 8, 1)
+x * c(TRUE, TRUE, FALSE, FALSE)
+A = matrix(x, nrow=2)
+L = matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
+A * L
+```
+
+Neither of these methods fully replicates the use of indices, but they can
+be very powerful when used together.
+
+```{r}
+x = c(2, 5, 8, 1)
+x[x > 3]
+x * (x > 3)
+
+A = matrix(x, nrow=2)
+A[A <= 2]
+A * (A <= 2)
+```
+
+#### Other usage
+
+It is possible to apply a logical vector to a matrix to isolate different rows
+or columns, as well.  Compare the following ways of using a logical vector to
+create submatrices of a numeric matrix:
 
 
 ```{r}
-
+B = matrix(26:50, nrow=5)
+L = c(TRUE, FALSE, TRUE, FALSE, TRUE)
+B
+B[L]    # returns a vector; be careful with this one!
+B[L,  ] # returns the rows corresponding to TRUE values of L
+B[ , L] # returns the columns corresponding to TRUE values of L
+B[L, L] # returns entries that are in both prior matrices
 ```
 
+#### "Short-circuited" Boolean functions
 
-```{r}
-
-```
+When the time comes for you to take an R program and make it run more
+efficiently, it's good to know that there are special Boolean functions
+designed for this purpose, namely && and ||.  These functions are very similar
+to the "and" and "or" functions, but they can decrease the total number of
+function evaluations needed in a complicated logical expression.  On the
+downside, they do not work with vectors and matrices the same way as "and"
+and "or" do.  We won't be needing these for this course.

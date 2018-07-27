@@ -1,0 +1,105 @@
+---
+title: "06 - Control: selection"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+### Automating decisions
+
+When executing instructions, R's default behavior is to start at the top of a
+script and work its way downward, executing each line of code one after another.
+Most of the time this will be perfectly fine, but there will be times when you
+want R to skip over some code or to only execute certain instructions in
+special circumstances.  For this we will need to use R's framework for what
+might be called "conditional execution", meaning execution only when certain
+conditions are satisfied.
+
+### if-else if-else
+
+The basic struction R has in place for conditional execution is the "if"
+statement.  The idea is this: you give R a condition and some code.  If R sees
+that the condition is TRUE, then it executes the code.  Otherwise, R skips over
+the code and looks for an "else" statement.  If it finds an "else", then R
+executes the code associated with the else statement if it skipped the "if"
+code, and skips it otherwise.  Try running the following code with different
+values of _x_, and note its behavior:
+
+```{r}
+x = 1
+if (x < 0) {
+  print("Negative.")
+} else {
+  print("Non-negative")
+}
+```
+
+Note that the else statement here is actually entirely optional: there is no
+requirement that you give R code to perform if your condition is not satisfied.
+
+If it happens that you want R to check multiple conditions in a row, executing
+code for which ever one is found to be true, you can use the "else if"
+structure.  Here is a more complicated sequence of conditions we can have R
+perform code based on:
+
+```{r}
+x <- 0.4
+
+if (x < 0) {
+  print("Negative.")
+} else if (x == 0) {
+  print("Zero.")
+} else if (x > 0 & x < 1) {
+  print("Between zero and one.")
+} else if (x >= 1) {
+  print("Greater than or equal to one.")
+} else if (x < 10) {
+  print("This should never be printed.")
+} else {
+  print("Something went very wrong.")
+}
+```
+
+When R sees this block of code, it proceeds as follows.  First, R evaluates
+each of the logical conditions following each if statement.  As soon as it
+sees that one of them evaluates to TRUE, R executes that statement's code and
+jumps out of the "if block".  If all of the conditions evaluate to FALSE, then
+R executes the code after the else statement.  This is why the code for the
+condition _x < 10_ should never be executed: any number that you might give
+to this code should have already satisfied one of the earlier conditions!
+
+The effect of this is that we can tell R to choose which code to run from a list
+of possible blocks of code, using some condition that it computed.
+
+You should note in this syntax that there are a lot of parentheses and braces
+use to separate different pieces.  This punctuation is actually what tells R
+how to read your code; the line breaks are the optional part.  Look at what
+happens when I decline to use line breaks and spaces in a nice way:
+
+```{r}
+x <- 0.5
+if(x<0){print("Negative.")}else if(x==0){print("Zero.")}else if(x>0&x<1){print(
+"Between zero and one.")}else if(x>=1){print("Greater than or equal to one.")
+}else{print("Something went wrong.")}
+```
+This code still functions, but it is very hard for a human to read.  It's
+a good idea to use line breaks and spaces in a conventional way if you ever
+want other people to be able to read your code.  I count "yourself, next week"
+as "other people" for this purpose, by the way.
+
+#### switch statements
+
+An alternative to if blocks in code is the use of a structure known as a
+switch statement.  Rather than check general logical expression, a switch
+statement looks at a given character string variable and performs code based
+on what value it has.
+You can always use an if block instead of a switch statement, but there are
+reasons (execution speed, code readability, personal style, etc.) to use it
+if you have that desire.
+
+### if-else on a vector
+
+By default, the if statement above does not work across vectors, instead only
+considering the first entry of a vector if asked to look at an entire vector
+at once.  If you want an if statement to go through and check on every entry in
+a vector in parallel, the way to do that in R is to use the _ifelse()_
+function, which acts as a sort of "vectorized" if statement.
