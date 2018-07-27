@@ -1,0 +1,50 @@
+---
+title: "08 - Functions"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+### Even more automation
+
+tk function syntax
+tk function scoping rules
+tk return statement behavior
+tk avoiding self-reference
+
+
+The final method of controlling how a program executes that I will introduce is
+the function.  A function in R is a sub-program within a script that you can
+run any time after the interpreter has been told about it.  Functions handle
+variables a little bit differently than you might expect:
+
+Variables in R are divided up into workspaces.  There is a global workspace, and
+every function has its own, smaller workspace.  When you define a function, it
+is able to see and read the values of any variable that is in its own workspace.
+If you ask a function to look for a variable that it cannot find in it's own
+workspace, then the function sets about trying to find what you are referring
+to.  If your function was defined within another function, then it looks to that
+function's workspace, and so on.  Once the search reaches the outermost level,
+where there are no more functions, it looks to the global workspace.  If no
+value is found here, the search extends to built-in values.  If this fails to
+produce a result, then R gives up.  Read about so-called "lexical scoping" if
+you want more details here.
+
+
+
+In RStudio, you can see what is in your global workspace by looking at the
+Global Environment pane that is usually located in the upper right corner of the
+Rstudio window.
+
+
+
+```{r}
+N <- 6
+f <- function(x) {
+  print(N)
+  N <- x
+  return(N)
+}
+f(3)
+print(N)
+```
+

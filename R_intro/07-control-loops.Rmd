@@ -6,7 +6,210 @@ output: html_notebook
 
 ### More automation
 
+Often in computations, the same operation needs to be repeated a number of times
+to complete a problem.  In this situation, you are very fortunate if the same
+computer code can be reused for each such iteration, since there is usually a
+way to tell your computer to repeat the code until it is done.  In R, this
+kind of repetition is done through loop structures.  There are three main loop
+structures in R: the "for loop", the "while loop", and the "repeat loop".
+
+### For loop
+
+The safest form of loop to use is the for loop.  For a for loop, you must
+first specify a vector or other list of values for R to iterate over.  R will
+go through the list and perform your code one time for each entry on the list,
+in the order that you appear on the list.  Note: don't alter this list within
+the loop.  It won't do anything useful in the R language, and it sets up a bad
+habit if you move on to certain other programming languages
+
+Here is an example for loop that runs a simple block of code 10 times
+to calculate compound interest.  For this code, I first some starting values,
+then run the loop, and finally have R give me the output I wanted.
 
 ```{r}
+principal <- 1000
+interest <- 0.04
+num_periods <- 10
+amount <- principal
+
+for (time in 1:num_periods) {
+  amount <- amount * (1 + interest)
+}
+
+print(amount)
+```
+
+Since this code is more complicated than the code I have been giving you, I
+have switched over to a convetion often used in programming: descriptive names.
+When you see a quantity in a math problem, you usually want to give it a terse,
+one-letter name like _x_.  This makes mathematical equations easier to read.
+
+In this program, however, I have four different quantities to work with.  I
+could give them short names, but that could spiral out of control very quickly
+if I have to do a problem with a large number of inputs.  Fortunately,
+the computer does not mind having to work with somewhat longer names, so I can
+easily afford to tell it to use the entire word "principal" instead of just a
+single "P".
+
+A benefit to this convention is that now anyone looking at my code has a good
+chance of understanding what my intentions were when I wrote the code, which
+makes code maintenance less of a chore.
+
+Now let's beef up that loop a little bit.  This time, I am going to have the
+loop keep track of all of the intermediate balances before the final period
+as well as the final amount.  I do this by changing _amount_ into a matrix and
+then setting its entries to be the numbers I compute.
+
+```{r}
+# Initialization.
+principal <- 1000
+interest <- 0.04
+num_periods <- 10
+amount <- matrix(0, 1 + num_periods, 1)  # pre-allocation (optional)
+amount[1] <- principal
+
+# Compute values and place then in the matrix.
+for (time in 1:num_periods) {
+  amount[time + 1] <- amount[time] * (1 + interest)
+}
+
+# Display the results.
+rownames(amount) <- c("start", 1:num_periods)
+colnames(amount) <- "balance"
+print(amount)
+```
+
+There is a lot going on in this code!  The most important thing to notice,
+however, is that this loop will run a total of 10 times and no more, because
+that is how long the vector used for iteration is.  To use a for loop, you
+always have to know in advance how many times the loop is going to run, or at
+least have a good upper bound.  This is what makes this sort of loop safer than
+the other two kinds: by itself, it cannot run away from you and try to repeat
+forever.
+
+### Other loops
+
+I will now go over the other two kinds of loops that you can use in R.  Unlike
+for loops, these constructs can easily create endlessly running programs.
+Please make sure to keep the following in mind:
+
+
+**CAUTION: some of the following scripts may cause your interpreter to become**
+**locked into an unending loop.  Either use the Esc key or Ctrl+C when the**
+**console pane has focus to tell R to stop execution.**
+
+#### while loops
+In some circumstances it is useful to have an operation that repeats until
+some condition is satisfied, instead of until a certain number of iterations
+have been completed.  This is the situation in which a while loop is useful.
+
+Suppose that in the prior problem setup, I really want to calculate how many 
+time periods it will take to have 2,000 in my account instead.  Here is my plan:
+I will tell R to keep iterating until the balance is over 2000.  Once that is
+done, thenI will have R tell me the number of times it iterated.  I am pretty
+sure that this will be done in a finite number of iterations, it's just that
+I don't know how many until I do some kind of calculation (much of this could
+be done by hand, too)
+
+```{r}
+principal <- 1000
+interest <- 0.04
+num_periods <- 0
+amount <- principal
+
+while (amount < 2000) {
+  amount <- amount * (1 + interest)
+  num_periods <- num_periods + 1
+}
+
+print(num_periods)
+```
+
+For a more interesting example, suppose that I am trying to pay off a loan.
+With every time period (month) that passes, the loan accrues interest and then
+I make a payment.  I can use a while loop to determine how long the loan will
+take to pay off.
+
+```{r}
+num_payments <- 0
+owed <- 200000.00
+interest <- 0.003
+payment <- 2000
+
+while (owed > 0) {
+  owed <- owed * (1 + interest)
+  owed <- owed - payment
+  num_payments <- num_payments + 1
+}
+final_payment = payment + owed
+cat("I will make", num_payments - 1, "payments of", payment,
+    "with one final payment of", final_payment, ". ",
+    "Paying off this loan will take", num_payments/12, "years.\n")
+```
+
+To present the data that came out of this calculation, I had R print out a
+summary message, using the _cat()_ function to turn a sequence of character
+strings into a single string.
+
+If you decide to change the numbers in this code, be very
+careful!  If the monthly payment for the loan is too low, then the loan will
+never be paid off and as such the code _will not stop on its own_.  A monthly
+payment of 600 won't cause a problem, but going a little bit below that will.
+
+#### Repeat
+
+Repeat loops function as while loops, except that there is no condition that
+makes a repeat loop stop.  That's right: repeat always makes infinite loops.
+Does that seem a little bit strange to you?  Fortunately, there are ways to tell
+a repeat loop that it is time to stop, which I will cover next.
+
+### Loop-breaking statements
+
+In a loop, you may decide that there are circumstances under which the loop
+should stop early.  After all, if you have a for loop that is supposed to
+iterate 100 times to look for something, and it finds it after 3 iterations,
+then why would you want it to keep going?  R has two main ways to change the
+flow of a loop: break and next.
+
+#### break
+
+When R sees a break statement, it immediately ends the last loop that it
+entered (especially relevant if you put a loop within another loop).  It you
+want to use repeat loops, the use of a break statement is mandatory if you want
+the loop to ever stop.  The following code uses the repeat-break construct.  Try
+to guess what it will do before you run it.
+
+```{r}
+N = 0
+repeat {
+  N <- N + 1
+  print(N)
+  if (N > 4) {
+    break
+  }
+}
+
+```
+
+#### next
+
+When R sees a next statement, it immediately ends the current iteration
+of the last loop that it entered, and it moves on to the next iteration.  This
+does not end the loop, but it does skip over any code in the loop that follows
+the statement.  Try to determine what the following code will do before you run
+it.
+
+```{r}
+N = 0
+repeat {
+  N <- N + 1
+  if (N < 2) {
+    next
+  }
+  print(N)
+  if (N > 4) {
+    break
+  }
+}
 
 ```
