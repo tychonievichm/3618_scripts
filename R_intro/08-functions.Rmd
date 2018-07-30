@@ -6,45 +6,210 @@ output: html_notebook
 
 ### Even more automation
 
-tk function syntax
-tk function scoping rules
-tk return statement behavior
-tk avoiding self-reference
-
-
 The final method of controlling how a program executes that I will introduce is
 the function.  A function in R is a sub-program within a script that you can
-run any time after the interpreter has been told about it.  Functions handle
-variables a little bit differently than you might expect:
-
-Variables in R are divided up into workspaces.  There is a global workspace, and
-every function has its own, smaller workspace.  When you define a function, it
-is able to see and read the values of any variable that is in its own workspace.
-If you ask a function to look for a variable that it cannot find in it's own
-workspace, then the function sets about trying to find what you are referring
-to.  If your function was defined within another function, then it looks to that
-function's workspace, and so on.  Once the search reaches the outermost level,
-where there are no more functions, it looks to the global workspace.  If no
-value is found here, the search extends to built-in values.  If this fails to
-produce a result, then R gives up.  Read about so-called "lexical scoping" if
-you want more details here.
-
-
-
-In RStudio, you can see what is in your global workspace by looking at the
-Global Environment pane that is usually located in the upper right corner of the
-Rstudio window.
-
-
+run any time after the interpreter has been told about it.  Though this may seem
+like a small addition to your tool-kit, the ability to write functions gives
+you a great deal of power!  Here is a simple example to get you started:
 
 ```{r}
-N <- 6
 f <- function(x) {
-  print(N)
-  N <- x
-  return(N)
+  y = x^2
+  return(y)
 }
 f(3)
-print(N)
+f(f(2))
 ```
 
+Before explaining the syntax and how to use it, here is another function that
+takes more than one argument and has a more descriptive name:
+
+```{r}
+multiply <- function(x, y) {
+  z <- x * y
+  return(z)
+}
+multiply(2, 4)
+multiply(1, 0)
+```
+
+To define a function, first you write down the name that you want to give it.
+You should name functions like you name variables: with descriptive and
+memorable names of a "reasonable" length.  You assign to this name "function", 
+followed by the list of inputs that you want to compute with in parentheses,
+followed by the code for the function in braces, like this:
+
+```{r}
+good_name <- function(list_of_inputs) {what_the_function_does}
+```
+
+Whenever you place the appropriate number of inputs in parentheses following
+your function name and run that code, R will execute the code you wrote for the
+function with those values in place the the variable names that you used. An
+important use for functions is, unsuprisingly, to execute the same code multiple
+times in different places without having to write multiple copies of that code.
+
+### Self-reference
+
+With all of the power that the use of functions gives you, it's important to
+realize that they are also quite dangerous.  Here is an example of a function
+that involves recursion to reproduce the functionality of a while loop, with
+all of the associated issues:
+
+```{r}
+danger <- function(x) {
+  if (x < 5) {
+    print("Danger")
+    danger(x + 1)
+  }
+}
+
+danger(0)
+```
+
+This sort of thing could easily run away on you, so be very cautious if you
+decide to do it.  If you can manage, I recommend sticking with loops
+so that others can more easily see your intentions.
+
+### Global Environment and remove()
+
+By now you may have noticed something about the functions that you've used so
+far: they are all somehow living in the Global Environment, and you can see
+references to them just below the list of variables you happen to have assigned.  This lets you know that you have continued access to those specific functions,
+and you will continue to have access to them, even in other scripts and
+notebooks that you might have open.  If you want to be rid of a function or
+variable in your workspace without overwriting it, you can do so with the
+following syntax:
+
+```{r}
+remove(f)
+remove(good_name)
+remove(multiply)
+```
+
+Even though R did not produce any output when those instructions were entered,
+you should see that those functions are no longer present in your Global
+Environment.  If you are wondering why you would ever want to do this, imagine
+that you accidentally tell R that it should make pi exactly 3.
+
+```{r}
+pi
+pi <- 3
+pi
+remove(pi)
+pi
+```
+
+The remove() function actually restores the built-in definition for pi!
+
+### Return()
+
+A final note on function syntax: by default, R will return the last thing it
+sees in a function computation as that function's value.  If you want to be
+sure that the correct thing is being returned, then you can use return().  As
+soon as R is asked to run a return() statement within a function, it will
+stop execution of the function's code and return whatever is in the
+parentheses as the function's output:
+
+```{r}
+f <- function(x) {
+  return(x)
+  print("No one will ever see this!")
+
+}
+f(3)
+```
+
+You can also use this as you would use a break statement in a loop to stop
+the function from doing unneeded computations:
+
+```{r}
+f <- function(x) {
+  if (x > 5) {
+    return(x^2)
+  }
+  return(x^3)
+
+}
+f(2)
+f(6)
+```
+
+### Scoping
+
+Variables in R are divided up into workspaces.  There is a global workspace, and
+it holds all of the variables that you define outside of function environments.
+Each function you define also has its own local workspace, that only exists
+while the function is being computed.  The local workspace holds any variable
+that you passed into it by including it as one of your function's inputs, as
+well as any variables that you define in the course of evaluating the function.
+Variables that you pass in will still be around after the function is done
+doing its work, at least as much as they were around before the function
+was called upon.
+
+If you define a variable within a
+function's code, it will exist in this temporary local workspace for the
+duration of the function's execution.  After the function is done, R's "garbage
+collector" will notice (usually very quickly) that the quantity is no longer
+being used, and the part of your computer's memory that held the quantity will
+be cleared out.  If you use a name for a local variable that coincides with a
+name for a global variable, this works just like how it worked when I
+tried to change the value of pi: the new value is used until it is somehow
+removed, either through the use of remove() or through the function ending
+its execution:
+
+```{r}
+t <- 5
+f <- function(x) {
+  t <- 3
+  print(t)
+}
+print(t)
+f(0)
+print(t)
+
+```
+
+Notice that the function printed its value of _t_, which was immediately
+cleared out when the function was done, restoring the "old" value of t for the
+final print().
+
+As with global variables and built-in values, it is possible for a function to
+see global variables without them being explicitly passed:
+
+```{r}
+t <- 5
+f <- function(x) {
+  print(t)
+  t <- 3
+  print(t)
+}
+f(0)
+f(0)
+```
+
+This function knew the global value of _t_ and used it until it was given a new
+value in the function's local workspace.  After the function was done, the local
+value went away, and the global value again became the only one that R uses.
+When the function executed the second time, it had to go back to the original
+globally defined value!
+
+If a function is defined within another function (a "local function"), something
+similar happens: the local function has its own workspace, and it treats
+it's containing function's workspace as a sort of global workspace.  But it can
+still access the global workspace, just at a lower priority.  How functions
+that are called in other functions access variables is determined by the
+method that R uses for something called "scoping".  R happens to use a
+method for scoping called "lexical scoping", which means that everything is
+determined by _where the function was defined_ and not _where it is being used_.
+If you want to use a function within another function and have it access that
+function's workspace, it has to be a local function.
+
+That said, the safest way to have one function access another function's
+computations is by explicitly passing everything that you care about as function
+arguments and never referring to variables within a function definition that the
+function isn't given explicitly.  This approach makes your R functions behave
+much more like mathematical functions: given the same inputs, they will always
+return the same outputs.  This way of doing things is often known as 
+"the functional programming paradigm."  It is not always possible to
+adhere to this paradigm in R.

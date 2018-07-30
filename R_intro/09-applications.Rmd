@@ -1,0 +1,13 @@
+---
+title: "09 - Applications"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+Now we are more than ready to use R to solve some computational problems.
+
+
+```{r}
+
+```
+
