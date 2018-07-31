@@ -1,0 +1,323 @@
+---
+title: "09 - Writing a Script"
+author: Michael Tychonievich, Ph.D.
+output: html_notebook
+---
+
+Let's revisit the mortgage payment example from the loops notebook:
+
+```{r}
+num_payments <- 0
+owed <- 200000.00
+interest <- 0.003
+payment <- 2000
+
+while (owed > 0) {
+  owed <- owed * (1 + interest)
+  owed <- owed - payment
+  num_payments <- num_payments + 1
+}
+final_payment = payment + owed
+cat("I will make", num_payments - 1, "payments of", payment,
+    "with one final payment of", final_payment, ". ",
+    "Paying off this loan will take", num_payments/12, "years.\n")
+```
+
+I would like to compare the time it takes to pay off the loan for many different
+payment sizes, preferably with some kind of nice-looking printout.  I will start
+by making the script into a function.  First, I will clear
+out the global environment so that I will notice if I forget to account for any
+of the many variables involved.
+
+```{r}
+remove(list=ls())
+```
+
+Now I will write the function.  It is going to need three inputs:
+_owed_, _interest_, and _payment_.  I will go ahead and make these the arguments
+of the function.  The variable *num_payments* will still be important in my
+computation, but it looks more like a variable that the function itself must
+determine.  That means that it should be a local variable instead of an input
+argument.  Since my new goals do not involve having the report made in the
+last step, I will also remove that.  
+
+```{r}
+payments <- function(payment=2000, interest=0.003, owed=200000){
+  num_payments <- 0
+
+while (owed > 0) {
+  owed <- owed * (1 + interest)
+  owed <- owed - payment
+  num_payments <- num_payments + 1
+}
+return(num_payments)
+}
+payments()
+payments(interest=.004)
+payments(1500)
+```
+
+Notice that the function takes its arguements in the order
+*(payment, interest, owed)*.  Deciding this was completely arbitrary on my part,
+and that means that this function could be difficult to work with.  To improve
+upon this, I made all of the input arguments into keyword arguments with some default values.  If
+someone knows how I named the different quantities in my function, they can set
+those quantities using my names instead of just relying on the order of inputs
+to determine how arguments are set.  This is a definite break with how
+mathematical notation works, but it can be very handy when lots and lots of
+functions are floating around at the same time.  If no input is given for an
+argument, then R will automatically put in my default value.
+
+Now I would like to make a table of values for this function for different
+values of the _payment_ input.  I do this with a for loop:
+
+```{r}
+num_trials <- 10
+col_1 <- matrix(0, nrow=num_trials)
+col_2 <- matrix(0, nrow=num_trials)
+
+for (i in 1:num_trials) {
+  payment = 1000 + 100*i
+  col_1[i] = payment
+  col_2[i] <- payments(payment=payment)  # This is weird!
+}
+T <- cbind(col_1, col_2)
+colnames(T) <- c("payment",".003")
+T
+```
+
+As I mentioned when I first covered kwargs, it sometimes happens that a global
+variable and a keyword argument for a function share the same name, in this case
+_payment_.  Because I set a default value for _payment_ within the payments()
+function, the function will always ignore the global value associated with
+_payment_ in favor of its own local value.  By writing "payment=payment" as an
+arguement, I am telling the function directly to use the current global value of
+_payment_ as the value it uses for its local variable, also named _payment_.
+Despite their names being the same, these two variables can easily refer to
+different things!
+
+Now that I have a script to make a small table, I would like to increase the
+scale once again.  This time I will make a function that repeatedly makes and
+binds columns to the matrix I just made.  I will start this by reorganizing my
+code a little bit.  The changes I make here will only affect how the code
+carries out its computations: the output for a given list of inputs should
+remain the same as the earlier code.  The process of doing this is often known
+as "code refactoring".
+
+
+```{r}
+num_trials <- 10
+col_1 <- matrix(1:10, nrow=num_trials)
+col_1 <- 1000 + 100 * col_1
+
+col_2 <- matrix(0, nrow=num_trials)
+
+for (i in 1:num_trials) {
+  col_2[i] <- payments(payment=col_1[i])
+}
+T <- cbind(col_1, col_2)
+colnames(T) <- c("payment",".003")
+T
+```
+
+This code does indeed give the same output as the earlier code, but it has an
+advantage: the calculation of *col_1* happens outside of the loop for
+calculating *col_2*, so I can more efficiently make new columns for my matrix.
+I'll do this with a new function:
+
+```{r}
+num_trials <- 10
+col_1 <- matrix(1:10, nrow=num_trials)
+col_1 <- 1000 + 100 * col_1
+
+col_maker <- function(interest, num_trials, payment_sizes) {
+  col <- matrix(0, nrow=num_trials)
+  for (i in 1:num_trials) {
+    col[i] <- payments(payment=payment_sizes[i], interest)
+  }
+  return(col)
+}
+
+col_2 <- col_maker(.003, num_trials, col_1)
+
+T <- cbind(col_1, col_2)
+colnames(T) <- c("payment",".003")
+T
+```
+
+Once again, this code gives me the same value for _T_, but now I have a simple
+way to attach more columns.
+
+```{r}
+col_2 <- col_maker(.002, payment_sizes=col_1, num_trials=num_trials)
+col_3 <- col_maker(.003, num_trials, col_1)
+col_4 <- col_maker(.004, num_trials, col_1)
+col_5 <- col_maker(.005, num_trials, col_1)
+
+T <- cbind(col_1, col_2, col_3, col_4, col_5)
+colnames(T) <- c("payment",".002",".003",".004",".005")
+T
+```
+
+That is a much larger and more interesting table of values than what I had
+before!  What's more, if I later use a formula to speed up the calculation of
+the payments() function, I only have to mess around with that function to
+upgrade the entire script.
+
+Notice that R still lets me use keyword arguments in my function, even though I
+did not give a default value to announce that I wanted that to happen.  Again,
+this means that I can input arguments in a different order than what was
+given when the function was defined.  Just to summarize, I will now place the
+entire script below:
+
+```{r}
+remove(list=ls())
+
+payments <- function(payment=2000, interest=0.003, owed=200000){
+  num_payments <- 0
+  while (owed > 0) {
+    owed <- owed * (1 + interest) - payment
+    num_payments <- num_payments + 1
+  }
+return(num_payments)
+}
+
+col_maker <- function(interest, num_trials, payment_sizes) {
+  col <- matrix(0, nrow=num_trials)
+  for (i in 1:num_trials) {
+    col[i] <- payments(payment=payment_sizes[i], interest)
+  }
+  return(col)
+}
+
+num_trials <- 10
+col_1 <- 1000 + 100 * matrix(1:10, nrow=num_trials)
+col_2 <- col_maker(.002, num_trials, col_1)
+col_3 <- col_maker(.003, num_trials, col_1)
+col_4 <- col_maker(.004, num_trials, col_1)
+col_5 <- col_maker(.005, num_trials, col_1)
+
+T <- cbind(col_1, col_2, col_3, col_4, col_5)
+colnames(T) <- c("payment",".002",".003",".004",".005")
+T
+
+```
+
+I used functions to automate the construction of these data sets, and then
+wrote out a list of very similar-looking commands to bind them up into a matrix
+for viewing.  If I am satisfied with this code, this is a good place to stop.
+But perhaps I would prefer to also automate the binding of columns.  That
+would make the construction of a 10-column table a bit more bearable.  Let's
+write a function to do this.  This time, I will use a vector of intest rates.
+
+```{r}
+num_trials <- 10
+col_1 <- 1000 + 100 * matrix(1:10, nrow=num_trials)
+make_payment_table <- function(interest_rates, num_trials, col_1) {
+  T <- col_1
+  colnames(T) <- "payment"
+  for (rate in interest_rates) {
+    new_col <- col_maker(rate, num_trials, col_1)
+    colnames(new_col) <- rate
+    T <- cbind(T, new_col)
+  }
+  return(T)
+}
+make_payment_table(c(.002,.003,.004,.005), num_trials, col_1)
+```
+
+That gets me my table with a single function call, so producing a large table
+just requires me to change a few parameters:
+
+```{r}
+num_trials = 21
+col_1 <- 100 * matrix(10:30, nrow=num_trials)
+make_payment_table(.0005*(1:10), num_trials, col_1)
+```
+
+Here is the current state of the script:
+
+```{r}
+remove(list=ls())
+
+payments <- function(payment=2000, interest=0.003, owed=200000){
+  num_payments <- 0
+  while (owed > 0) {
+    owed <- owed * (1 + interest) - payment
+    num_payments <- num_payments + 1
+  }
+return(num_payments)
+}
+
+col_maker <- function(interest, num_trials, payment_sizes) {
+  col <- matrix(0, nrow=num_trials)
+  for (i in 1:num_trials) {
+    col[i] <- payments(payment=payment_sizes[i], interest)
+  }
+  return(col)
+}
+
+make_payment_table <- function(interest_rates, num_trials, col_1) {
+  T <- col_1
+  colnames(T) <- "payment"
+  for (rate in interest_rates) {
+    new_col <- col_maker(rate, num_trials, col_1)
+    colnames(new_col) <- rate
+    T <- cbind(T, new_col)
+  }
+  return(T)
+}
+
+num_trials = 21
+col_1 <- 100 * matrix(10:30, nrow=num_trials)
+make_payment_table(.0005*(1:10), num_trials, col_1)
+```
+
+This is a fairly complicated script at this point.  If I was to leave it like
+this and come back tomorrow, I might forget what each of the functions I wrote
+is supposed to work.  To help with that, I will alter the script by adding in
+some comments.  I do this at the start of every function, and every time I do
+something "clever."
+
+```{r}
+remove(list=ls())
+
+payments <- function(payment=2000, interest=0.003, owed=200000){
+  # Calculates the number of payments made on a loan with a given interest rate.
+  # payment : the size of each loan payment
+  # interest : the interest rate per period
+  # owed : the initial loan amount
+  num_payments <- 0
+  while (owed > 0) {
+    owed <- owed * (1 + interest) - payment
+    num_payments <- num_payments + 1
+  }
+return(num_payments)
+}
+
+col_maker <- function(interest, num_trials, payment_sizes) {
+  # creates a column of payment numbers in a table
+  col <- matrix(0, nrow=num_trials)
+  for (i in 1:num_trials) {
+    col[i] <- payments(payment=payment_sizes[i], interest)
+  }
+  return(col)
+}
+
+make_payment_table <- function(interest_rates, num_trials, col_1) {
+  # Binds together columns of payment numbers to make a table showing payment
+  # numbers for various payment sizes and interest rates
+  T <- col_1
+  colnames(T) <- "payment"
+  for (rate in interest_rates) {
+    new_col <- col_maker(rate, num_trials, col_1)
+    colnames(new_col) <- rate  # label new column with interest rate
+    T <- cbind(T, new_col)
+  }
+  return(T)
+}
+
+num_trials = 21
+col_1 <- 100 * matrix(10:30, nrow=num_trials)
+make_payment_table(.0005*(1:10), num_trials, col_1)
+```

@@ -10,8 +10,7 @@ Often it is useful to have numerical data arranged in "spreadsheet" format
 instead of as a linear list.  The most primitive way of doing this in R is by
 recording the data in a matrix.  A matrix in R is essentially a vector with
 extra information indicating how data is to be organized into rows and columns.
-**CAUTION: All numbers in a single **
-**matrix must be of the same type!**  
+**CAUTION: All numbers in a single matrix must be of the same type!**  
 If you place data of different types in the same matrix, then all entries will
 be coerced into the most general data type present, just like with standard
 vectors.  As with vectors, this
