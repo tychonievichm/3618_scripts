@@ -29,3 +29,19 @@ This part of the repository will consist of several scripts and data files inten
 ## 3618 Scripts
 
 This part of the course will consist of several projects related to different parts of Math 3618.  I will try to include references to the appropriate parts of the Intro to R section, but I make no guarantees.  Exercises here will usually include sample code for similar problems to help you get started.
+
+# References
+## General R:
+Links to all sorts of R documentation [r-project.org](https://www.r-project.org/other-docs.html)
+
+## R for working with data
+Collin McCabe is a data scientist in Columbus, OH.  He ran an R course Summer 2018: [Cőde Bootcamp - Data Science in R](https://github.com/collinmmccabe/bootcampR).
+
+Hadley Wickham is a statistician who has written a number of books on R.  Some of these are freely available on his personal website: [hadley.nz](http://hadley.nz/).
+
+## Online learning
+Try R katas at Codewars.  R support is not fully implemented, and I don't know enough about this site to give a full endorsement.[codewars.com] (https://www.codewars.com/).
+
+Online learning links by RStudio: [rstudio.com](https://www.rstudio.com/online-learning/).
+
+Or try Google: [google.com](https://www.google.com/search?q=intro+to+r).
