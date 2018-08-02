@@ -4,7 +4,14 @@ author: Michael Tychonievich, Ph.D.
 output: html_notebook
 ---
 
-Let's revisit the mortgage payment example from the loops notebook:
+Let's revisit the mortgage payment example from the loops notebook.  I am to
+expand upon the script we examined there to get it to generate some data that
+I might be interested in.  Please note that most of what I will show you in this
+notebook will be the style that I personally follow: you can certainly decide to
+do things in a different way.
+
+
+Here is the old script:
 
 ```{r}
 num_payments <- 0
@@ -273,9 +280,9 @@ col_1 <- 100 * matrix(10:30, nrow=num_trials)
 make_payment_table(.0005*(1:10), num_trials, col_1)
 ```
 
-This is a fairly complicated script at this point.  If I was to leave it like
+This is a fairly complicated script at this point: if I was to leave it like
 this and come back tomorrow, I might forget what each of the functions I wrote
-is supposed to work.  To help with that, I will alter the script by adding in
+is supposed to do.  To help avoid that, I will alter the script by adding in
 some comments.  I do this at the start of every function, and every time I do
 something "clever."
 
@@ -284,6 +291,9 @@ remove(list=ls())
 
 payments <- function(payment=2000, interest=0.003, owed=200000){
   # Calculates the number of payments made on a loan with a given interest rate.
+  # 
+  # Inputs:
+  #
   # payment : the size of each loan payment
   # interest : the interest rate per period
   # owed : the initial loan amount
@@ -297,6 +307,12 @@ return(num_payments)
 
 col_maker <- function(interest, num_trials, payment_sizes) {
   # creates a column of payment numbers in a table
+  # 
+  # Inputs:
+  #
+  # interest : the interest rate per period
+  # payment_sizes : list of payment sizes to check
+  # num_trials : the number of payment sizes to check
   col <- matrix(0, nrow=num_trials)
   for (i in 1:num_trials) {
     col[i] <- payments(payment=payment_sizes[i], interest)
@@ -307,6 +323,12 @@ col_maker <- function(interest, num_trials, payment_sizes) {
 make_payment_table <- function(interest_rates, num_trials, col_1) {
   # Binds together columns of payment numbers to make a table showing payment
   # numbers for various payment sizes and interest rates
+  # 
+  # Inputs:
+  #
+  # interest_rates : interest rates to check: determines the number of columns
+  # num_trials : the number of payment sizes to check
+  # col_1 : the column of payment sizes to check
   T <- col_1
   colnames(T) <- "payment"
   for (rate in interest_rates) {
@@ -321,3 +343,82 @@ num_trials = 21
 col_1 <- 100 * matrix(10:30, nrow=num_trials)
 make_payment_table(.0005*(1:10), num_trials, col_1)
 ```
+
+That is much better, and as an added bonus other people who only get to see my
+script code will now have a much better chance of knowing what I was thinking
+when I wrote it!  This commenting also forced me to look back at my code.  There
+are definitely some issues that I saw that I might want to deal with.  None of
+these changes are required: after all, the program already does what I wanted
+it to do!  Because of this, it's not a bad idea for me to write down all of
+the _optional_ changes I might make to "improve"" it.  That way I can consider
+which improvements are worth my time, and which should be neglected.  It would
+also be a good time to set aside a backup copy of my code (if I haven't been
+doing that all along) in case I manage to break something in a way that I don't
+fully understand.  Here is my list of issues to consider:
+
+* I used *col_1* as my name for the list of payment sizes I want to check in
+some places, and *payment_sizes* in others.  Could I use just one of those
+names?
+
+* I keep demanding that the length of the various columns gets passed from
+function to function, when I could have had each function recompute it using
+the length() function.  Should I have done this instead?
+
+* _T_ is not a very descriptive name for what I want out of that particular
+compilation of data.  Should I change it?
+
+* Sometimes I write my inputs using keywords and sometimes I don't.  Should I
+stick with one approach over the other?
+
+* I did not give the rows of the matrix _T_ any names.  Is that something I
+Should consider?
+
+* I happen to know that creating a new column and binding it to a matrix causes
+R to make a new column and a new copy of the final matrix in my computer's
+memory every time I do it.  This might make my program slower than it needs to
+be; should I change the way new data is added to the matrix to avoid this?
+
+* Through the use of functions, I have effectively put a while loop inside of a
+for loop inside of another for loop.  This style of programming may prevent R
+from performing "parallel processing", exploiting the fact that my computer has
+multiple processor cores.  Should I try eliminate one of these loops?
+
+* For certain combinations of interest rate and payment size, the loan under
+consideration will never be paid off.  Should I make my program act differently,
+perhaps returning a value of NA when that happens?  How can I tell if that is
+going to happen?
+
+* Should I put in default values for the arguments of more of my functions?
+
+* The arguments that I used when I finally applied my functions at the end of
+the script involve using :.  Is there a better way for me to have these
+functions receive input?
+
+As you can see, the list of issues I may want to address is already longer than
+the script itself!  It would be straightforward to just go through this list and
+make these changes, but it might be better for me in terms of productivity if I
+set some priorities.  I am going to prioritize those issues that are either
+quick to fix or could cause my program to break:
+
+#### Quick fixes:
+
+* Rename _T_ to *payment_table*
+
+* Rename col_1 *to payment_sizes*
+
+* Recompute length every time it is needed.
+
+#### Possible game-breaker:
+
+* Use a formula to calculate payment for a perpetuity, cut off calculations if
+the payment size involves is larger than the payment of a perpetuity.
+Alternatively, pick a big number and cut off anything that goes longer than
+that.  Maybe 1200 periods?
+
+#### Skippable:
+
+* Skip optimization of loops since the program seems to run quickly enough.
+
+* Leave the input format for make_payment_table() alone for now, and revisit if
+it becomes an issue somehow.
+
