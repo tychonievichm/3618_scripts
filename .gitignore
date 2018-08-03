@@ -1,7 +1,7 @@
 # Html notebooks
-/R_intro/*.nb.html
+*.nb.html
 /old/
-/R_intro/*.html
+*.html
 
 # History files
 .Rhistory
