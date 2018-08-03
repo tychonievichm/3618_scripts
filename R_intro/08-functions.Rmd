@@ -213,3 +213,37 @@ much more like mathematical functions: given the same inputs, they will always
 return the same outputs.  This way of doing things is often known as 
 "the functional programming paradigm."  It is not always possible to
 adhere to this paradigm in R.
+
+Exercises.
+
+1.  Redefine the exponential function exp(), and verify that you did so.  Then
+remove your new definition from the Global Environment and verify that the old
+exponential function is back.
+
+2.  What precisely is wrong with the following version of the multiply() 
+function?
+
+```{r}
+y = 4
+z = 5
+multiply <- function(x, y) {
+  y * z
+}
+```
+
+3.  Explain how to replace any and all instances of loops with recursion.  Then
+explain why doing this replacement might not be a good idea.
+
+4.  Explain what the following script will do, then run it to verify:
+
+```{r}
+multiply <- function(x, y) {
+  x * y
+  add <- function(a, b) {
+    a + b
+  }
+  add(x, y)
+}
+multiply(2, 3)
+add(2, 3)
+```

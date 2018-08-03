@@ -159,9 +159,9 @@ originally.  This works a lot of the time, but you should check if you ever
 start working with new relations.
 
 ```{r}
-x = c(2, 5, 8, 1)
+x <- c(2, 5, 8, 1)
 x > 3
-A = matrix(x, nrow=2)
+A <- matrix(x, nrow=2)
 A > 3
 ```
 
@@ -170,10 +170,10 @@ a vector of things that show up in the same places as any TRUE values in the
 logical vector or matrix.  The logical vector or matrix used should be the same size as the vector or matrix you are using it with to make this work well.
 
 ```{r}
-x = c(2, 5, 8, 1)
+x <- c(2, 5, 8, 1)
 x[c(TRUE, TRUE, FALSE, FALSE)]
-A = matrix(x, nrow=2)
-L = matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
+A <- matrix(x, nrow=2)
+L <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
 A[L]
 ```
 
@@ -188,10 +188,10 @@ logical values as numeric values, you can use multiplication by logicals as a
 way to "slice" a vector or matrix.
 
 ```{r}
-x = c(2, 5, 8, 1)
+x <- c(2, 5, 8, 1)
 x * c(TRUE, TRUE, FALSE, FALSE)
-A = matrix(x, nrow=2)
-L = matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
+A <- matrix(x, nrow=2)
+L <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2)
 A * L
 ```
 
@@ -199,11 +199,11 @@ Neither of these methods fully replicates the use of indices, but they can
 be very powerful when used together.
 
 ```{r}
-x = c(2, 5, 8, 1)
+x <- c(2, 5, 8, 1)
 x[x > 3]
 x * (x > 3)
 
-A = matrix(x, nrow=2)
+A <- matrix(x, nrow=2)
 A[A <= 2]
 A * (A <= 2)
 ```
@@ -216,13 +216,13 @@ create submatrices of a numeric matrix:
 
 
 ```{r}
-B = matrix(26:50, nrow=5)
-L = c(TRUE, FALSE, TRUE, FALSE, TRUE)
+B <- matrix(26:50, nrow=5)
+L <- c(TRUE, FALSE, TRUE, FALSE, TRUE)
 B
-B[L]    # returns a vector; be careful with this one!
-B[L,  ] # returns the rows corresponding to TRUE values of L
-B[ , L] # returns the columns corresponding to TRUE values of L
-B[L, L] # returns entries that are in both prior matrices
+B[L]
+B[L,  ]
+B[ , L]
+B[L, L]
 ```
 
 #### "Short-circuited" Boolean functions
@@ -234,3 +234,54 @@ to the "and" and "or" functions, but they can decrease the total number of
 function evaluations needed in a complicated logical expression.  On the
 downside, they do not work with vectors and matrices the same way as "and"
 and "or" do.  We won't be needing these for this course.
+
+
+Exercises.
+
+1.  When doing numerical computations, it is common for a bit of rounding error
+to creep in.  In fact, you should always expect that "*x* == *y*" is not going
+to tell you if two computed values are really equal.  A replacement for 
+this is isTRUE(all.equal(x, y)), which tells you if _x_ and _y_ are "close."
+If _x_ is the number 1, then how close does _y_ need to be for this to return
+the value TRUE?
+
+```{r}
+x <- 1
+y <- 1.0001
+isTRUE(all.equal(x, y))
+```
+
+2.  For the following vector _y_, return a vector that has the same length, but,
+using numeric relations on _y_, make it so that:
+
+* every element that is greater than 1 is replaced by 1
+
+* every element that is less than -1 is replaced by -1
+
+* every element that is between -0.3 and 0.3 is replaced by 0.
+
+* every other element is the same as the corresponding element of _y_
+
+Then generate a new value for y using the expression given for _x_ and verify
+that your formula still works.
+
+```{r}
+x <- trunc(100*runif(10,-2,2))/100
+```
+
+```{r}
+y <- x
+```
+
+3.  Really look at this example, and explain why you should have expected each of
+the outputs that you got.
+
+```{r}
+B <- matrix(26:50, nrow=5)
+L <- c(TRUE, FALSE, TRUE, FALSE, TRUE)
+B
+B[L]
+B[L,  ]
+B[ , L]
+B[L, L]
+```

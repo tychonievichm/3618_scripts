@@ -242,4 +242,28 @@ x[c(3, 1)]
 
 ```
 
+Exercises.
+1.  Experiment with the rep() function on vectors of various lengths.  Notice
+the use of kwargs; what happens if you remove some of these arguments or change
+the values?
 
+```{r}
+rep(c(1, 5, 7), times=2, length.out=5, each=2)
+
+
+```
+
+2.  I want to create the following vector, but I want to do it using the :
+operation to ensure that I have an easier time later if I want to make a similar
+vector, only much longer.  How can I do this?
+
+```{r}
+x <- c(500, 700, 900, 1100, 1300)
+```
+
+3.  Given a positive integer _n_, how can I create a vector of all zeros with
+length _n_?  Try (at least) the following two different ways: using the colon
+operation and using the rep() function.
+
+4.  What happens when you combine (using the c() function) a named vector and
+a vector with no names?

@@ -204,3 +204,41 @@ ceiling(1 + 1*10^(-15))
 ceiling(1 + 1*10^(-16))
 
 ```
+# Exercises.
+
+1.  Let's pull up the curtain and take a look at how R assigned variables.  Here
+I will use a potentially dangerous function (.Internal) to ask R to tell me
+where in my computer the values I made are physically located.  The information
+I am interested in is that first block of characters, starting with "@".  What
+can you say about what you see?
+
+```{r}
+print("Assign x and y:")
+x <- 2
+y <- x
+.Internal(inspect(x))
+.Internal(inspect(y))
+print("Reassign y:")
+y <- 2
+.Internal(inspect(x))
+.Internal(inspect(y))
+print("Reassign x and y:")
+x <- 4
+y <- 4
+.Internal(inspect(x))
+.Internal(inspect(y))
+```
+
+2.  In the section on rounding, you saw the following script.  By changing the
+value of x, try to figure out what each of those rounding functions actually
+does.  Use ?round to look at the help file and see if you figured their behavior
+out completely.
+
+```{r}
+x = 3.4
+round(x)
+ceiling(x)
+floor(x)
+trunc(x)
+as.integer(x)
+```

@@ -1,7 +1,9 @@
 ---
 title: "09 - Writing a Script"
-author: Michael Tychonievich, Ph.D.
-output: html_notebook
+author: "Michael Tychonievich, Ph.D."
+output:
+  html_document:
+    df_print: paged
 ---
 
 Let's revisit the mortgage payment example from the loops notebook.  I am to
@@ -422,3 +424,104 @@ that.  Maybe 1200 periods?
 * Leave the input format for make_payment_table() alone for now, and revisit if
 it becomes an issue somehow.
 
+```{r}
+remove(list=ls())
+
+# For a given list of interest rates and payment sizes, gives the number of
+# periods required to pay off a mortgage loan of 200000.
+#
+# Functions:
+# payments: for a given loan, returns the number of payments required
+# column_maker: creates a column of payment numbers for various payment sizes
+# make_payment_table: compiles those columns into a table for various rates
+
+payments <- function(payment=2000, interest=0.003, owed=200000){
+  # Calculates the number of payments made on a loan with a given interest rate.
+  # 
+  # Inputs:
+  #
+  # payment  : the size of each loan payment
+  # interest : the interest rate per period
+  # owed     : the initial loan amount
+  num_payments <- 0
+  # return NA if payment is less than the interest charged in the first period
+  # or if the payment is "near" to that interest charge
+  if (payment <= owed * interest || 
+      isTRUE(all.equal(payment, owed * (1 + interest)))) {
+    return(NA)
+  }
+  while (owed > 0) {
+    owed <- owed * (1 + interest) - payment
+    num_payments <- num_payments + 1
+  }
+return(num_payments)
+}
+
+column_maker <- function(interest=.003, payment_sizes=100*(10:20)) {
+  # creates a column of payment numbers in a table
+  # 
+  # Inputs:
+  #
+  # interest : the interest rate per period
+  # payment_sizes : list of payment sizes to check
+  num_trials <- length(payment_sizes)
+  col <- matrix(0, nrow=num_trials)
+  for (i in 1:num_trials) {
+    col[i] <- payments(payment=payment_sizes[i], interest=interest)
+  }
+  return(col)
+}
+
+make_payment_table <- function(interest_rates=.003, payment_sizes=100*(10:20)) {
+  # Binds together columns of payment numbers to make a table showing payment
+  # numbers for various payment sizes and interest rates
+  # 
+  # Inputs:
+  #
+  # interest_rates : interest rates to check: determines the number of columns
+  # payment_sizes : the column of payment sizes to check
+  payment_table <- payment_sizes
+  colnames(payment_table) <- "payment"
+  for (rate in interest_rates) {
+    new_column <- column_maker(interest=rate, payment_sizes=payment_sizes)
+    colnames(new_column) <- rate  # label new column with interest rate
+    payment_table <- cbind(payment_table, new_column)
+  }
+  return(payment_table)
+}
+
+num_trials = 21
+payment_sizes <- matrix(100*(10:30), nrow=num_trials)
+make_payment_table(interest_rates=.0005*(1:10), payment_sizes=payment_sizes)
+```
+
+Now I feel like the script is done: I've got my table, the code is more
+readable, and I prevented the situation where the program runs forever in a way
+that isn't too disruptive, but that lets me know when it's triggered.  What
+else might I do to improve the script?
+
+# Exercises.
+
+1.  Rewrite the final script by typing out everything _by hand_: no copying and
+pasting.  You do not need to recopy the comments.  Go through your script and
+change all of the descriptive variable names to names that are single letters.
+Does this improve readability?  Check back in two weeks and ask yourself that
+question again.
+
+2.  Improve the script by turning it into a single function, making each of the
+functions I wrote into local functions defined within its braces.  Make sure to
+indent everything an extra time to make it visually apparent that you've done
+this.
+
+3.  Improve this script in the following way: take as initial inputs the
+nominal interest rate per year and number of compoundings per year, and give 
+the time to pay off the loan in units of years instead of periods.  Label each
+column with the annual rate instead of the interest rate per period!  Change the
+payment size so that equal payments are made each period, and label each row
+with the payment size per "month."
+
+4.  There is a formula to calculate the number of payments needed to pay off the
+loan more directly.  Rewrite this script entirely to take advantage of this
+formula.  You should be able to do this with fewer than three loops by using
+vector and matrix operations.  It may help to review the different ways of
+rounding numbers in R.

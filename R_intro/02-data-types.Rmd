@@ -80,3 +80,20 @@ sending messages, recording "metadata", keeping track of names, and much more.
 
 That said, if a number is turned into a character in an unexpected way, you
 will likely start seeing some errors pop up.
+
+# Exercises.
+
+1.  Verify the order of precedence I wrote by adding to the following script.
+Don't assume anything: check all 20 different combinations.
+
+```{r}
+a <- "string"; b <- 8.5; c <- as.integer(5); d <- TRUE; e <- NULL
+cat(class(c), "with", class(b), "yields", class(c(c, b)))
+```
+
+2.  Here is another class of object.  Where does it fit in this order of
+precedence?
+
+```{r}
+f = 2 + 3i
+```

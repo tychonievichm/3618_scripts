@@ -213,3 +213,45 @@ repeat {
 }
 
 ```
+
+Exercises.
+
+1.  For the following vector _y_, return a vector that has the same length, but,
+using the if-else blocks and a for loop, make it so that:
+
+* every element that is greater than 1 is replaced by 1
+
+* every element that is less than -1 is replaced by -1
+
+* every element that is between -0.3 and 0.3 is replaced by 0.
+
+* every other element is the same as the corresponding element of _y_
+
+Then generate a new value for y using the expression given for _x_ and verify
+that your formula still works.
+```{r}
+x <- trunc(100*runif(10,-2,2))/100
+```
+
+```{r}
+y <- x
+```
+
+Did you like this method better than using logical relations directly?  How
+about the ifelse() function?  Which one produces code that is most readable?
+
+2.  Write a for loop that, given a vector, returns the value of the least
+element.  Do not use min() or any other function in your script.
+
+3.  Write a script that takes a numeric input _x_ and repeatedly cuts it in half
+until it is smaller than 10^-10^, returning the result after the appropriate
+number of halvings.  Do this in three different ways,
+
+* Using a while loop
+
+* Using a repeat loop with a break statement.
+
+* Using a for loop with a break statement.  Make sure to loop over a vector that
+is long enough, but don't try to make it "infinitely long."
+
+* For a challenge, do this using no loops.  Logarithms will be helpful!

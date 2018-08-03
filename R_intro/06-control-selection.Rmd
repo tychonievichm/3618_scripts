@@ -103,3 +103,42 @@ considering the first entry of a vector if asked to look at an entire vector
 at once.  If you want an if statement to go through and check on every entry in
 a vector in parallel, the way to do that in R is to use the _ifelse()_
 function, which acts as a sort of "vectorized" if statement.
+
+Exercises.
+
+1.  Use an if-else block to take a numeric argument _x_ and print one of the 
+following messages:
+
+* "Not an integer." if _x_ is a number that is not an integer in the
+mathematical sense.  In this sense, 1 is an integer despite the fact that
+is.integer(1) evaluates to FALSE.  You must exercise caution!
+
+* "Odd integer." if _x_ is an odd integer.
+
+* "Even integer." if _x_ is an even integer.
+
+* "Error!" if _x_ fails to be a number.
+
+2.  For the following vector _y_, return a vector that has the same length, but,
+using the ifelse() function on _y_, make it so that:
+
+* every element that is greater than 1 is replaced by 1
+
+* every element that is less than -1 is replaced by -1
+
+* every element that is between -0.3 and 0.3 is replaced by 0.
+
+* every other element is the same as the corresponding element of _y_
+
+Then generate a new value for y using the expression given for _x_ and verify
+that your formula still works.
+```{r}
+x <- trunc(100*runif(10,-2,2))/100
+```
+
+```{r}
+y <- x
+```
+
+Did you like this method better than using logical relations directly?  Which
+one produces code that is more readable?

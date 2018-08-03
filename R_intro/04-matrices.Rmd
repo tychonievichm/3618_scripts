@@ -222,3 +222,17 @@ A %% B
 If you want to perform matrix multiplication or other operations that you saw
 in your linear algebra class, you will need to use other syntax.  I won't
 cover any of that here.
+
+Exercises.
+
+1.  What happens when you use the c() function to combine two matrices?
+
+2.  What happens when you use the rep() function on a matrix?
+
+3.  What happens when you use cbind() and rbind() with two matrices instead of
+with a matrix and a vector?
+
+4.  What happens when you add matrices of different sizes?
+
+5.  Given numbers _n_ and _m_, how can I create an _n_ by _m_ matrix of all
+zeros by using the matrix() function?
