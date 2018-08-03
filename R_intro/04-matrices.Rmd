@@ -223,7 +223,7 @@ If you want to perform matrix multiplication or other operations that you saw
 in your linear algebra class, you will need to use other syntax.  I won't
 cover any of that here.
 
-Exercises.
+# Exercises.
 
 1.  What happens when you use the c() function to combine two matrices?
 

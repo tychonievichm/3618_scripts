@@ -214,7 +214,7 @@ return the same outputs.  This way of doing things is often known as
 "the functional programming paradigm."  It is not always possible to
 adhere to this paradigm in R.
 
-Exercises.
+# Exercises.
 
 1.  Redefine the exponential function exp(), and verify that you did so.  Then
 remove your new definition from the Global Environment and verify that the old

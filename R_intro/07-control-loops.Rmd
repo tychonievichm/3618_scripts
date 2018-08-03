@@ -214,7 +214,7 @@ repeat {
 
 ```
 
-Exercises.
+# Exercises.
 
 1.  For the following vector _y_, return a vector that has the same length, but,
 using the if-else blocks and a for loop, make it so that:

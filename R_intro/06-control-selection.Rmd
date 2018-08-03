@@ -104,7 +104,7 @@ at once.  If you want an if statement to go through and check on every entry in
 a vector in parallel, the way to do that in R is to use the _ifelse()_
 function, which acts as a sort of "vectorized" if statement.
 
-Exercises.
+# Exercises.
 
 1.  Use an if-else block to take a numeric argument _x_ and print one of the 
 following messages:

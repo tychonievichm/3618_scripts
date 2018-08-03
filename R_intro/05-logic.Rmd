@@ -236,7 +236,7 @@ downside, they do not work with vectors and matrices the same way as "and"
 and "or" do.  We won't be needing these for this course.
 
 
-Exercises.
+# Exercises.
 
 1.  When doing numerical computations, it is common for a bit of rounding error
 to creep in.  In fact, you should always expect that "*x* == *y*" is not going

@@ -242,7 +242,7 @@ x[c(3, 1)]
 
 ```
 
-Exercises.
+# Exercises.
 1.  Experiment with the rep() function on vectors of various lengths.  Notice
 the use of kwargs; what happens if you remove some of these arguments or change
 the values?
