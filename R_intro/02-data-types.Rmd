@@ -1,9 +1,7 @@
 ---
 title: "02 - Data Types"
 author: "Michael Tychonievich, Ph.D."
-output:
-  html_document:
-    df_print: paged
+output: html_notebook
 ---
 
 ### How R stores numbers

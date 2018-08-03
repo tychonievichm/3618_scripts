@@ -1,0 +1,94 @@
+---
+title: "01 - Interest Calculations"
+author: "Michael Tychonievich, Ph.D."
+output: html_notebook
+---
+
+Let's make some more scripts to deal with interest rate problems.  To get the
+most out of this notebook, you should open up a separate .r script file and
+retype the code there.  Then, when it comes time to change the code or build on
+it, you should save a backup copy and continue your work.  Leave enough comments
+behind that you will know what you were trying to do if you look back at your
+work later.
+
+### Nominal and effective interest rates
+
+1.  Make a calculator that, given a nominal interest rate per year, a number 
+of compounding periods per year, and a second number of compoundings per year,
+returns the equivalent nominal interest rate.
+
+Solution.  I started with the formula that converts nominal interest rate per
+year into an accumulation factor for compound interest.  Since the interest rate
+is constant, it's enough to do this for one year.  I wrote the equation down
+again and did some algebra to solve for the new nominal rate.  Then I typed in
+the calculation in three steps to help with readability.
+
+```{r}
+new_nominal <- function(old_nominal, old_periods, new_periods) {
+  eff_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
+  new_acc_factor_per <- (eff_ann_acc_factor)^(1/new_periods)
+  new_nominal_rate <- new_periods * (new_acc_factor_per - 1)
+  return(new_nominal_rate)
+}
+```
+
+2.  Write a script that makes a table to verify this calculation numerically.
+
+Solution.  We've already for the accumulation factor for the first setup.  Let's
+make a function to find it for the second setup and compare the results for a
+few different sets of inputs.  I produced these inputs uniformly at random using
+the runif() function, which is a way to get test data automatically.  The table
+I made is quite ugly and may not present the information the way I want, but 
+does it verify the calculation?  How would you improve its appearance and the
+quality of the information it delivers? 
+
+```{r}
+new_nominal_rate <- function(old_nominal, old_periods, new_periods) {
+  eff_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
+  new_acc_factor_per <- (eff_ann_acc_factor)^(1/new_periods)
+  new_nominal <- new_periods * (new_acc_factor_per - 1)
+  return(new_nominal)
+}
+
+make_row <- function(old_nominal, old_periods, new_periods) {
+  old_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
+  new_nominal <- new_nominal_rate(old_nominal, old_periods, new_periods)
+  new_ann_acc_factor <- (1 + new_nominal/new_periods)^new_periods
+  row = c(old_ann_acc_factor, new_ann_acc_factor, 
+          old_ann_acc_factor - new_ann_acc_factor)
+  return(row)
+}
+
+make_table <- function() {
+  comparison_table <- c("old acc", "new acc", "diff")
+  for (i in 1:20) {
+    new_row <- make_row(runif(1,0,1), runif(1,1,100), runif(1,1,100))
+    comparison_table <- rbind(comparison_table, new_row)
+  }
+  return(comparison_table)
+}
+make_table()
+```
+
+3.  Rewrite the scripts from 1. and 2. using "mathematical" notation.  Does this
+improve readability?
+
+4.  Repeat exercises 1 and 2, only this time you are given the new nominal
+interest rate and your goal will be to calculate the new number of compoundings
+per year.  Will it always be mathematically possible for your calculator to give
+an answer?
+
+5.  Challenge: use kwargs to combine the two calculators into a
+single function.
+
+### Present value
+
+
+
+
+
+
+
+
+
+
