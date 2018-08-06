@@ -1,8 +1,8 @@
-# 3618_scripts
+## 3618 scripts
 
 This is a collection of R projects and script files to be used by Math and Actuarial Science majors at The Ohio State University who are currently taking Math 3618: Theory of Interest.  It will be divided in two pieces: Introduction to R and financial math scripts.
 
-## Downloads
+# Downloads
 
 There are several items that you will want (or need) to download to run these scripts as intended:
 
@@ -22,24 +22,26 @@ While you can download this repository as a .zip file to get all of the files on
 
 To use these apps with GitHub, you will likely need to register for a GitHub account.  If you do this, please make sure to choose a professional-looking username.  If you decide to post code to GitHub, anyone with internet access will be able to look at what you wrote.  This should be a good thing, but names like "xXxAlucArdXdrAculAxXx" don't really scream "I am a responsible adult who should be trusted with responsibility over something that matters."
 
-## Intro to R
+# Repository Content
+
+### Intro to R
 
 This part of the repository will consist of several scripts and data files intended to be used to get started with using R quickly.  It is intended that you will run through the scripts, and then keep them on hand as a reference for solving problems.  You should not copy and paste from these files!  Retyping the commands yourself will help you remember what syntax is supposed to go where.
 
-## 3618 Scripts
+### 3618 Scripts
 
 This part of the course will consist of several projects related to different parts of Math 3618.  I will try to include references to the appropriate parts of the Intro to R section, but I make no guarantees.  Exercises here will usually include sample code for similar problems to help you get started.
 
 # References
-## General R:
+### General R:
 Links to all sorts of R documentation [r-project.org](https://www.r-project.org/other-docs.html)
 
-## R for working with data
+### R for working with data
 Collin McCabe is a data scientist in Columbus, OH.  He ran an R course Summer 2018: [Cőde Bootcamp - Data Science in R](https://github.com/collinmmccabe/bootcampR).
 
 Hadley Wickham is a statistician who has written a number of books on R.  Some of these are freely available on his personal website: [hadley.nz](http://hadley.nz/).  You should refer his book **Advanced R** if you are interested in how R does things behind the scenes. 
 
-## Online learning
+### Online learning
 Try R katas at Codewars.  R support is not fully implemented, and I don't know enough about this site to give a full endorsement.[codewars.com](https://www.codewars.com/).
 
 Online learning links by RStudio: [rstudio.com](https://www.rstudio.com/online-learning/).
