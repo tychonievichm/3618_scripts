@@ -4,7 +4,7 @@ This is a collection of R projects and script files to be used by Math and Actua
 
 ## Downloads
 
-There are several items that will want (or need) to download to run these scripts as intended:
+There are several items that you will want (or need) to download to run these scripts as intended:
 
 ### R interpreter and IDE
 
@@ -37,10 +37,10 @@ Links to all sorts of R documentation [r-project.org](https://www.r-project.org/
 ## R for working with data
 Collin McCabe is a data scientist in Columbus, OH.  He ran an R course Summer 2018: [Cőde Bootcamp - Data Science in R](https://github.com/collinmmccabe/bootcampR).
 
-Hadley Wickham is a statistician who has written a number of books on R.  Some of these are freely available on his personal website: [hadley.nz](http://hadley.nz/).
+Hadley Wickham is a statistician who has written a number of books on R.  Some of these are freely available on his personal website: [hadley.nz](http://hadley.nz/).  You should refer his book **Advanced R** if you are interested in how R does things behind the scenes. 
 
 ## Online learning
-Try R katas at Codewars.  R support is not fully implemented, and I don't know enough about this site to give a full endorsement.[codewars.com] (https://www.codewars.com/).
+Try R katas at Codewars.  R support is not fully implemented, and I don't know enough about this site to give a full endorsement.[codewars.com](https://www.codewars.com/).
 
 Online learning links by RStudio: [rstudio.com](https://www.rstudio.com/online-learning/).
 
