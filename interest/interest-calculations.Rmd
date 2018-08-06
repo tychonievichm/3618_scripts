@@ -43,24 +43,24 @@ does it verify the calculation?  How would you improve its appearance and the
 quality of the information it delivers? 
 
 ```{r}
-new_nominal_rate <- function(old_nominal, old_periods, new_periods) {
+new_nominal <- function(old_nominal, old_periods, new_periods) {
   eff_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
   new_acc_factor_per <- (eff_ann_acc_factor)^(1/new_periods)
-  new_nominal <- new_periods * (new_acc_factor_per - 1)
-  return(new_nominal)
+  new_nominal_rate <- new_periods * (new_acc_factor_per - 1)
+  return(new_nominal_rate)
 }
 
 make_row <- function(old_nominal, old_periods, new_periods) {
   old_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
-  new_nominal <- new_nominal_rate(old_nominal, old_periods, new_periods)
-  new_ann_acc_factor <- (1 + new_nominal/new_periods)^new_periods
+  new_nominal_rate <- new_nominal(old_nominal, old_periods, new_periods)
+  new_ann_acc_factor <- (1 + new_nominal_rate/new_periods)^new_periods
   row = c(old_ann_acc_factor, new_ann_acc_factor, 
           old_ann_acc_factor - new_ann_acc_factor)
   return(row)
 }
 
 make_table <- function() {
-  comparison_table <- c("old acc", "new acc", "diff")
+  comparison_table <- c("old acc", "new acc", "residual: old - new")
   for (i in 1:20) {
     new_row <- make_row(runif(1,0,1), runif(1,1,100), runif(1,1,100))
     comparison_table <- rbind(comparison_table, new_row)
@@ -70,15 +70,72 @@ make_table <- function() {
 make_table()
 ```
 
-3.  Rewrite the scripts from 1. and 2. using "mathematical" notation.  Does this
+3.  "Automatic testing."  Make a function that automates the testing of the 
+function new_nominal, compiling data into some sort of histogram for residuals.
+
+Solution.  I will take some of the code from above and reuse it.  In particular,
+I want to extract the part that generates random data and produces residuals.
+I decided to redo that part of the code this time to take advantage of a
+feature that R has: if you have a for loop that only repeatedly applies the same
+function over a large data set, you can use a function called mapply() instead
+of writing out the full for loop.  This makes the code more readable (once you
+know what mapply() is for) and is common in "R-style" coding.
+
+What do you think of the output histogram?  What happens if you increase the
+number of trials?  What happens if you allow for larger numbers of periods?
+
+```{r}
+new_nominal <- function(old_nominal, old_periods, new_periods) {
+  eff_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
+  new_acc_factor_per <- (eff_ann_acc_factor)^(1/new_periods)
+  new_nominal_rate <- new_periods * (new_acc_factor_per - 1)
+  return(new_nominal_rate)
+}
+
+make_test_data <- function(num_trials=1000) {
+  old_nominal <- runif(num_trials, 0, 1)
+  old_periods <- runif(num_trials, 1, 100)
+  new_periods <- runif(num_trials, 1, 100)
+  #                   mapply(my_function, my_data)
+  new_nominal_rate <- mapply(new_nominal, old_nominal, old_periods, new_periods)
+  old_ann_acc_factor <- (1 + old_nominal/old_periods)^old_periods
+  new_ann_acc_factor <- (1 + new_nominal_rate/new_periods)^new_periods
+  return(old_ann_acc_factor - new_ann_acc_factor)
+}
+
+compile_test_data <- function(num_trials=1000) {
+  trials <- make_test_data(num_trials)
+  residuals_hist = matrix(0, nrow=4, ncol=1)
+  rownames(residuals_hist) <- c(">10^-13", "<10^-13", "<10^-14", "<10^-15")
+  colnames(residuals_hist) <- "number of trials"
+  for (i in 1:num_trials) {
+    if (trials[i] < 10^-15) {
+      residuals_hist["<10^-15",] = residuals_hist["<10^-15",] + 1
+    } else if (trials[i] < 10^-14) {
+      residuals_hist["<10^-14",] = residuals_hist["<10^-14",] + 1
+    } else if (trials[i] < 10^-13) {
+      residuals_hist["<10^-13",] = residuals_hist["<10^-13",] + 1
+    } else {
+      residuals_hist[">10^-13",] = residuals_hist[">10^-13",] + 1
+    }
+  }
+  return(residuals_hist)
+}
+
+compile_test_data(1000)
+```
+
+4.  Rewrite make_test_data() to replace the use of mapply() with a for loop.
+
+5.  Rewrite the scripts from 1. and 2. using "mathematical" notation.  Does this
 improve readability?
 
-4.  Repeat exercises 1 and 2, only this time you are given the new nominal
+6.  Repeat exercises 1 and 2, only this time you are given the new nominal
 interest rate and your goal will be to calculate the new number of compoundings
 per year.  Will it always be mathematically possible for your calculator to give
 an answer?
 
-5.  Challenge: use kwargs to combine the two calculators into a
+7.  Challenge: use kwargs to combine the two calculators into a
 single function.
 
 ### Present value
