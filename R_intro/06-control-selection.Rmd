@@ -6,23 +6,11 @@ output: html_notebook
 
 ### Automating decisions
 
-When executing instructions, R's default behavior is to start at the top of a
-script and work its way downward, executing each line of code one after another.
-Most of the time this will be perfectly fine, but there will be times when you
-want R to skip over some code or to only execute certain instructions in
-special circumstances.  For this we will need to use R's framework for what
-might be called "conditional execution", meaning execution only when certain
-conditions are satisfied.
+When executing instructions, R's default behavior is to start at the top of a script and work its way downward, executing each line of code one after another. Most of the time this will be perfectly fine, but there will be times when you want R to skip over some code or to only execute certain instructions in special circumstances. For this we will need to use R's framework for what might be called "conditional execution", meaning execution only when certain conditions are satisfied.
 
-### if-else if-else
+### The structures `if`, `else if`, and `else`
 
-The basic struction R has in place for conditional execution is the "if"
-statement.  The idea is this: you give R a condition and some code.  If R sees
-that the condition is TRUE, then it executes the code.  Otherwise, R skips over
-the code and looks for an "else" statement.  If it finds an "else", then R
-executes the code associated with the else statement if it skipped the "if"
-code, and skips it otherwise.  Try running the following code with different
-values of _x_, and note its behavior:
+The basic struction R has in place for conditional execution is the `if` statement. The idea is this: you give R a condition and some code. If R sees that the condition is `TRUE`, then it executes the code.  Otherwise, R skips over the code and looks for an "else" statement.  If it finds an `else`, then R executes the code associated with the else statement if it skipped the `if` code, and skips it otherwise. Try running the following code with different values of `x`, and note its behavior:
 
 ```{r}
 x = 1
@@ -33,13 +21,9 @@ if (x < 0) {
 }
 ```
 
-Note that the else statement here is actually entirely optional: there is no
-requirement that you give R code to perform if your condition is not satisfied.
+Note that the else statement here is actually entirely optional: there is no requirement that you give R code to perform if your condition is not satisfied.
 
-If it happens that you want R to check multiple conditions in a row, executing
-code for which ever one is found to be true, you can use the "else if"
-structure.  Here is a more complicated sequence of conditions we can have R
-perform code based on:
+If it happens that you want R to check multiple conditions in a row, executing code for which ever one is found to be true, you can use the `else if` structure. Here is a more complicated sequence of conditions we can have R perform code based on:
 
 ```{r}
 x <- 0.4
@@ -59,86 +43,61 @@ if (x < 0) {
 }
 ```
 
-When R sees this block of code, it proceeds as follows.  First, R evaluates
-each of the logical conditions following each if statement.  As soon as it
-sees that one of them evaluates to TRUE, R executes that statement's code and
-jumps out of the "if block".  If all of the conditions evaluate to FALSE, then
-R executes the code after the else statement.  This is why the code for the
-condition _x < 10_ should never be executed: any number that you might give
-to this code should have already satisfied one of the earlier conditions!
+When R sees this block of code, it proceeds as follows. First, R evaluates each of the logical conditions following each` if` statement. As soon as it sees that one of them evaluates to `TRUE`, R executes that statement's code and jumps out of the `if` block. If all of the conditions evaluate to `FALSE`, then R executes the code after the else statement. This is why the code for the condition `x < 10` should never be executed: any number that you might give to this code should have already satisfied one of the earlier conditions! This is one way to have R return a warning if some assumption that you made happens to not be true.
 
-The effect of this is that we can tell R to choose which code to run from a list
-of possible blocks of code, using some condition that it computed.
+The effect of the `if`-`else` structure is that we can tell R to choose which code to run from a list of possible blocks of code, using some condition that it computed.
 
-You should note in this syntax that there are a lot of parentheses and braces
-use to separate different pieces.  This punctuation is actually what tells R
-how to read your code; the line breaks are the optional part.  Look at what
-happens when I decline to use line breaks and spaces in a nice way:
+You should note in this syntax that there are a lot of parentheses and braces use to separate different pieces. This punctuation is actually what tells R how to read your code; the line breaks are the optional part! Look at what happens when I decline to use line breaks and spaces in a nice way:
 
 ```{r}
-x <- 0.5
-if(x<0){print("Negative.")}else if(x==0){print("Zero.")}else if(x>0&x<1){print(
-"Between zero and one.")}else if(x>=1){print("Greater than or equal to one.")
-}else{print("Something went wrong.")}
+x<-0.5;if(x<0){print("Negative.")}else if(x==0){print("Zero.")}else if(x>0&x<1
+) {print("Between zero and one.")}else if(x>=1){print("Greater than or equal
+to one.")}else{print("Something went wrong.")}
 ```
-This code still functions, but it is very hard for a human to read.  It's
-a good idea to use line breaks and spaces in a conventional way if you ever
-want other people to be able to read your code.  I count "yourself, next week"
-as "other people" for this purpose, by the way.
 
-#### switch statements
+This code still functions, but it is very hard for a human to read. It is squished together, and there is no "whitespace" around to set apart the different pieces of the code. It's a good idea to use line breaks and spaces in a conventional way if you ever want other people to be able to read your code. I count "yourself, next week" as "other people" for this purpose, by the way.
 
-An alternative to if blocks in code is the use of a structure known as a
-switch statement.  Rather than check general logical expression, a switch
-statement looks at a given character string variable and performs code based
-on what value it has.
-You can always use an if block instead of a switch statement, but there are
-reasons (execution speed, code readability, personal style, etc.) to use it
-if you have that desire.
+#### The `switch` structure
 
-### if-else on a vector
+An alternative to `if` blocks in code is the use of a structure known as a `switch` statement. Rather than check general logical expression, a `switch` statement looks at a given character string variable and performs code based on what value it has. You can always use an if block instead of a switch statement, but there are reasons (execution speed, code readability, personal style, etc.) to use it if you have that desire.  I will avoid using it in these notebooks.
 
-By default, the if statement above does not work across vectors, instead only
-considering the first entry of a vector if asked to look at an entire vector
-at once.  If you want an if statement to go through and check on every entry in
-a vector in parallel, the way to do that in R is to use the _ifelse()_
-function, which acts as a sort of "vectorized" if statement.
+### `if`-`else` on a vector
+
+By default, the `if` statement above does not work across vectors, instead only considering the first entry of a vector if asked to look at an entire vector at once. If you want an if statement to go through and check on every entry in a vector *in parallel*, the way to do that in R is to use the `ifelse()` function, which acts as a sort of "vectorized" `if` statement.
 
 # Exercises.
 
-1.  Use an if-else block to take a numeric argument _x_ and print one of the 
+1.  Use an if-else block to take a numeric argument `x` and print one of the 
 following messages:
 
-* "Not an integer." if _x_ is a number that is not an integer in the
-mathematical sense.  In this sense, 1 is an integer despite the fact that
-is.integer(1) evaluates to FALSE.  You must exercise caution!
+    * `"Not an integer."` if `x` is a number that is not an integer in the mathematical sense.  In this sense, 1 is an integer despite the fact that is.integer(1) evaluates to FALSE.  You must exercise caution!
 
-* "Odd integer." if _x_ is an odd integer.
+    * `"Odd integer."` if `x` is an odd integer.
 
-* "Even integer." if _x_ is an even integer.
+    * `"Even integer."` if `x` is an even integer.
 
-* "Error!" if _x_ fails to be a number.
+    * `"Error!"` if `x` fails to be a number.
 
-2.  For the following vector _y_, return a vector that has the same length, but,
-using the ifelse() function on _y_, make it so that:
+2.  For the following vector `y`, return a vector `z` that has the same length, but,
+using the ifelse() function on `y`, make it so that:
 
-* every element that is greater than 1 is replaced by 1
+    * every element that is greater than 1 is replaced by `1`
 
-* every element that is less than -1 is replaced by -1
+    * every element that is less than -1 is replaced by `-1`
 
-* every element that is between -0.3 and 0.3 is replaced by 0.
+    * every element that is between -0.3 and 0.3 is replaced by `0`
 
-* every other element is the same as the corresponding element of _y_
+    * every other element is the same as the corresponding element of `y`
 
-Then generate a new value for y using the expression given for _x_ and verify
-that your formula still works.
+    Then generate a new value for y using the expression given for `x` and verify that your formula still works. Did you like this method better than using logical relations directly?  Which one produces code that is more readable?
+
 ```{r}
 x <- trunc(100*runif(10,-2,2))/100
-```
-
-```{r}
 y <- x
 ```
 
-Did you like this method better than using logical relations directly?  Which
-one produces code that is more readable?
+```{r}
+z <- y 
+x
+z
+```

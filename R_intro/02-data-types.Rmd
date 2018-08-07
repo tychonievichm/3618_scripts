@@ -6,33 +6,15 @@ output: html_notebook
 
 ### How R stores numbers
 
-When you give a number to R, it has to store it in one of a few standard formats
-in your computer's memory.  The format used is part of what is refered to as
-the number's "type".  Here is a brief explanation of how this works.  You can
-hold off on reading this notebook until later.
+When you give a number to R, it has to store it in one of a few standard formats in your computer's memory. The format used is part of what is refered to as the number's "type".  Here is a brief explanation of how this works. You can hold off on reading this notebook until later.
 
-Each formats define the amount of memory that is
-permitted to be stored for a number, so there is a limit to how precise your
-stored data can be.  Unless you specify otherwise, each of your numbers will
-be allotted a total of 64 bits (binary digits).  Within 64 bits, you can store
-up to 2^64^ different combinations of 1 and 0.  How much precision this gives
-you depends on the format used!  
+Each formats define the amount of memory that is permitted to be stored for a number, so there is a limit to how precise your stored data can be. Unless you specify otherwise, each of your numbers will be allotted a total of 64 bits (binary digits).  Within 64 bits, you can store up to 2^64^ different combinations of 1 and 0.  How much precision this gives you depends on the format used!  
 
-The double (or double-precision floating point, IEEE 754) type is what we will 
-most commonly use in calculations.  This format stores numbers in scientific
-notation, only using powers of 2 instead of powers of 10 to determine a sort of
-order of magnitude.  Enough data is devoted to each number that the most
-precision you can rely on getting is 15 decimal digits of precision.  This is
-why the _ceiling()_ function "misbehaved" earlier: I added a number to 1
-that was so small that the closest number to it that R could store for it was
-the number 1 itself.
+The double (or double-precision floating point, IEEE standard 754) type is what we will most commonly use in calculations.  This format stores numbers in scientific notation, only using powers of 2 instead of powers of 10 to determine a sort of order of magnitude.  Enough data is devoted to each number that the most precision you can rely on getting is 15 decimal digits of precision. This is why the `ceiling()` function "misbehaved" earlier: I added a number to 1 that was so small that the closest number to it that R could store for it was the number 1 itself.
 
-Closely related to
-the type of a number is its class, and that is something that we can easily
-check within R itself.  Numbers of type double are in class numeric, as are
-a few other formats, including "single precision".  Here are some examples of
-me changing the type of a number (type casting) whereupon I check the class of
-the result.
+Closely related to the type of a number is its class, and that is something that we can easily check within R itself using the `class()` function.  Numbers of type double are in class numeric, as are a few other formats, including "single precision"
+
+Here are some examples of me changing the type of a number (type casting) using `as`, whereupon I check the class of the result.
 
 ```{r}
 class(3)
@@ -40,22 +22,16 @@ class(as.single(3))
 class(as.integer(3))
 ```
 
-These numbers are all 3, in a sense, but they would be remembered differently by
-R.
+These numbers are all 3, in a sense, but they are stored differently by R.
 
 #### Coercion
 
-If needed, R can also change the class of a number to suit its needs.  This
-process is known as "coercion".  For the sorts of numbers we will use, there
-is a hierarchy of coercion as follows:
+If needed, R can also change the class of a number to suit its needs. This process is known as "coercion". For the sorts of numbers we will use, there is a hierarchy of coercion as follows:
 
 NULL $\rightarrow$ logical $\rightarrow$ integer $\rightarrow$ numeric 
  $\rightarrow$ character
 
-If R encounters two objects of different classes on this list that are put
-together in a way that requires them to be of the same class to get a valid
-output, then R will change the class of one of the objects by moving it to the
-right on this chart until it is the same as the other one.
+If R encounters two objects of different classes on this list that are put together in a way that requires them to be of the same class to get a valid output, then R will change the class of one of the objects by moving it to the right on this chart until it is the same as the other one.
 
 ```{r}
 a <- "string"; b <- 8.5; c <- as.integer(5); d <- TRUE; e <- NULL
@@ -63,35 +39,29 @@ class(c + b)
 class(d + e)
 ```
 
-At this point, you are probably wondering why I think that this is important
-enough to include here.  The reason is this: it will be very useful for you to
-combine multiple numbers into lists so that you can move them around in larger
-chunks.  Many of the ways of doing this sort of thing happen to tell R to
-coerce all of your data to be of the same type, which can cause problems if
-doing this causes unwanted truncation or conversion to character strings.
+At this point, you are probably wondering why I think that this is important enough to include here.  The reason is this: it will be very useful for you to combine multiple numbers into lists so that you can move them around in larger chunks.  Many of the ways of doing this sort of thing happen to tell R to coerce all of your data to be of the same type, which can cause problems if doing this causes unwanted truncation or conversion to character strings.
 
 #### Character type
 
-A special type that you will see is the character type.  This is the type of
-plain text, not read as any sort of number.  This type of data is useful for
-sending messages, recording "metadata", keeping track of names, and much more.
+A special type that you will see is the `character` type. This is the type of plain text, not read as any sort of number.  This type of data is useful for sending messages, recording "metadata", keeping track of names, and much more.
 
-That said, if a number is turned into a character in an unexpected way, you
-will likely start seeing some errors pop up.
+That said, if a number is turned into a character string in an unexpected way, you will likely start seeing some errors pop up. Believe it or not, this is actually a good thing: if something goes wrong, you want to know about it!
 
 # Exercises.
 
-1.  Verify the order of precedence I wrote by adding to the following script.
-Don't assume anything: check all 20 different combinations.
+1.  Verify the order of coercion precedence I wrote by adding to the following script.  Don't assume anything: check all 20 different combinations.
 
 ```{r}
 a <- "string"; b <- 8.5; c <- as.integer(5); d <- TRUE; e <- NULL
 cat(class(c), "with", class(b), "yields", class(c(c, b)))
 ```
 
-2.  Here is another class of object.  Where does it fit in this order of
-precedence?
+2.  Here is another class of object.Where does it fit in this order of precedence?
 
 ```{r}
 f = 2 + 3i
 ```
+
+3.  The object 'NA' is intended to represent a quantity that is "not available".  What class is `NA`?  What happens when you perform arithmetic operations between `NA` and numbers?  What about arithmetic operations between `NA` and `NA`?  What class is `NA + 1`?  Why should `NA` be treated this way?
+
+4.  The objects `Inf` and `NaN` also have something to do with numeric quantities. What happens when you perform arithmetic operations with them?

@@ -6,15 +6,7 @@ output: html_notebook
 
 ### Vectors: R's default kind of "list"
 
-It is often useful to store series of numbers in a list so that they can all be
-processed and moved together, using a nice naming scheme.  The default way that
-R does this is by forming a vector.  **CAUTION: All numbers in a single **
-**vector must be of the same type!**  If you form a vector with different data
-types, R will coerce
-all of the data according to the rule given in the previous notebook.  This
-usually won't be a problem, but beware placing a character string in a vector
-with numbers!  The simplest way to form a vector from numbers that you happen
-to have lying around is to use the _c()_ function.
+It is often useful to store series of numbers in a list so that they can all be processed and moved together, using a nice naming scheme. The default way that R does this is by forming a vector.  **CAUTION: All numbers in a single vector must be of the same type!**  If you form a vector with different data types, R will coerce all of the data according to the rule given in the previous notebook. This usually won't be a problem, but beware placing a character string in a vector with numbers!  The simplest way to form a vector from numbers that you happen to have lying around is to use the `c()` function.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -23,26 +15,13 @@ y <- c("a", 5, 7, 3)
 y
 ```
 
-Note that the numerical values gained quotation marks in the second vector.
-This indicates that they are no considered to be character strings by R and
-not numerical values.  R does this so that each vector has a single format
-associated with it, meaning that it can save on memory by not having to remember
-the format of each entry individually.  It also means that R does not have to
-think as much about how to combine two vectors together using arithmetic
-operations.  This matters a lot when dealing with
-very large data sets, even if it is somewhat of a hassle now.  
+Note that the numerical values gained quotation marks in the second vector. This indicates that they are no considered to be character strings by R and not numerical values. R does this so that each vector has a single format associated with it, meaning that it can save on memory by not having to remember the format of each entry individually.It also means that R does not have to think as much about how to combine two vectors together using arithmetic operations. This matters a lot when dealing with very large data sets, even if it is somewhat of a hassle now.  
 
-If you really want to get a list
-of values with different types, use the _list()_ function as you would use the
-_c()_ function.  Lists are more flexible in terms of storing data, but none of
-arithmetic operations below work easily with them.  I will try to avoid using
-lists whenever possible.
+If you really want to get a list of values with different types, use the `list()` function as you would use the `c()` function.Lists are more flexible in terms of storing data, but none of arithmetic operations below work easily with them. I will try to avoid using lists whenever possible in favor of vectors.
 
 ### Vector arithmetic
 
-Vectors can be combined in R in several ways.  The general rule to remember is
-that R will combine vectors entry-by-entry unless it can't or you go out of your
-way to ask for something else.
+Vectors can be combined in R in several ways. The general rule to remember is that R will combine vectors entry-by-entry unless it can't or you go out of your way to ask for something else.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -52,10 +31,7 @@ x * y
 x ^ y
 ```
 
-When you perform arithmetic operations involving vectors of different lengths,
-R will do its best to match the sizes and then perform the operation.  This
-means that the smaller vector will be combined to itself until it is as long
-as the other vector, and then the operation will take place.
+When you perform arithmetic operations involving vectors of different lengths, R will do its best to match the sizes and then perform the operation. This means that the smaller vector will be combined to itself until it is as long as the other vector, and then the operation will take place.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -64,9 +40,7 @@ x * z
 z * x
 ```
 
-In particular, this works well with scalar addition and multiplication, as long
-as you remember that adding a single number to a vector adds it to every entry
-of the vector separately.
+In particular, this works well with scalar addition and multiplication, as long as you remember that adding a single number to a vector adds it to every entry of the vector separately.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -75,12 +49,7 @@ x + a
 x * a
 ```
 
-If the length of the smaller vector does not divide the length of the longer
-vector evenly, you will get an error message.  If you accidentally combine
-vectors of different lengths, it is important to remember that sometimes R will
-throw back an error, and sometimes R will act by making compies of the smaller
-vector and then combine the resulting vectors as you asked!  You can go ahead
-and check the length of the vector with the _length()_ function if you like.
+If the length of the smaller vector does not divide the length of the longer vector evenly, you will get an error message.If you accidentally combine vectors of different lengths, it is important to remember that sometimes R will throw back an error, and sometimes R will act by making compies of the smaller vector and then combine the resulting vectors as you asked!You can go ahead and check the length of the vector with the `length()` function if you like.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -91,9 +60,7 @@ length(z)
 
 ### Combining vectors
 
-If you want to combine two vectors into a single longer vector, the _c()_
-function handles that as well.  Notice that the order of the vectors in the
-argument list matters.
+If you want to combine two vectors into a single longer vector, the `c()` function handles that as well.Notice that the order of the vectors in the argument list matters.
 
 ```{r}
 x <- c(1, 5, 7)
@@ -104,13 +71,7 @@ c(x, z)
 
 ### Vector indices
 
-The _c()_ function works great when it comes to joining two vectors together,
-but it obviously cannot handle pulling out pieces of a longer vector.  R has
-a completely different syntax for this, using indices.  In a vector, each of the
-various entries each get an integer index (a name or label) associated with it.
-The first element of the vector gets the index 1, and the index goes up by one
-for each entry you move to the right.  You can access the entry with index _i_
-of the vector _z_ by typing _z[i]_.
+The `c()` function works great when it comes to joining two vectors together, but it obviously cannot handle pulling out pieces of a longer vector. R has a completely different syntax for this, using indices.  In a vector, each of the various entries each get an integer index (a name or label) associated with it. The first element of the vector gets the index `1`, and the index goes up by one for each entry you move to the right.  You can access the entry with index `i` of the vector `z` by typing `z[i]`.
 
 ```{r}
 z <- c(2, 1, 5, 6, 3, 9, 1, 1)
@@ -120,18 +81,9 @@ c(z[3], z[5])
 z[9]
 ```
 
-For that last entry, R gave back a new sort of value, NA.  This value indicates
-that R was unable to find any data at that index, but it leaves open the
-possibility that the number exists while R just doesn't know what the number's
-value is.  Think of it as R's indicator for "missing" data.  This is not the
-same as R's NULL object, which indicates that data is actually nonexistent.
+For that last entry, R gave back a new sort of value: `NA`. This value indicates that R was unable to find any data at that index, but it leaves open the possibility that the number exists while R just doesn't know what the number's value is. Think of it as R's indicator for "missing" data.  This is not the same as R's `NULL` object, which indicates that data is actually nonexistent.
 
-We can change the entries of a vector using this notation as well.  Doing so
-will have a similar affect to reassigning the vector, in that it won't change
-any data that you already computed from the old version of the vector.  On the
-other hand, it involves less use of computer resources than completely
-remaking the vector, which can matter when dealing with large data sets and
-multi-stop algorithms.  You can even change a value to NA!
+We can change the entries of a vector using this notation as well. Doing so will have a similar affect to reassigning the vector, in that it won't change any data that you already computed from the old version of the vector. On the other hand, it involves less use of computer resources than completely remaking the vector, which can matter when dealing with large data sets and multi-stop algorithms. You can even change a value to `NA`!
 
 ```{r}
 z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
@@ -142,11 +94,7 @@ x[2] <- NA; x
 
 ### Vector "slicing"
 
-If you want to grab a subset of the entries of a vector, it is possible to
-get them by using indices explicitly.  Since this sort of operation is so
-commonly used, R has some shortcuts in place to take "slices" out of a vector.
-You do this by merely listing the indices of the entries that you want, in the
-order that you want them.
+If you want to grab a subset of the entries of a vector, it is possible to get them by using indices explicitly. Since this sort of operation is so commonly used, R has some shortcuts in place to take "slices" out of a vector. You do this by merely listing the indices of the entries that you want, in the order that you want them.
 
 ```{r}
 z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
@@ -155,9 +103,7 @@ z[c(4, 8)]
 z[c(9, 8, 7, 6)]
 ```
 
-For certain commonly requested slices, R has syntax to make the requests even
-faster.  The most useful of these is the colon function, which generates lists
-of numbers in arithmetic progression.  Here are some examples:
+For certain commonly requested slices, R has syntax to make the requests even faster.  The most useful of these is the "colon function" `:`, which generates vectors of numbers in arithmetic progression. Here are some examples:
 
 ```{r}
 1:10
@@ -166,38 +112,25 @@ of numbers in arithmetic progression.  Here are some examples:
 5:2
 ```
 
-When the larger number is on the right, the colon function produces a vector
-of numbers that increase by 1 each time you move to the right, until doing so
-would exceed the larger number.  If the larger number is on the right, the
-colon function does the same thing, but it decreases by 1 each time you move
-an entry to the right.  It works this way even if the numbers you give are not
-integers.
+When the larger number is on the right, the colon function produces a vector of numbers that increase by 1 each time you move to the right, until doing so would exceed the larger number. If the larger number is on the right, the colon function does the same thing, but it decreases by 1 each time you move an entry to the right.  It works this way even if the numbers you give are not integers.
 
 ```{r}
 2.5:5.2
 5.2:2.5
 ```
 
-If you want all of the entries of a vector with indices 3 through 7, you can
-just use colon to ask for them:
+If you want all of the entries of a vector with indices 3 through 7, you can just use `:` to ask for them:
 
 ```{r}
 z <- c(2, 1, 5, 6, 3, 9, 1, 1); z
 z[3:7]
 ```
 
-R has other ways of slicing up vectors that you may find useful.  These include
-the _head()_ and _tail()_ functions, as well as the use of negative indices.
+R has other ways of slicing up vectors that you may find useful. These include the `head()` and `tail()` functions, as well as the use of negative indices.
 
 ### Naming the entries of a vector
 
-When raw data is imported to R from an outside source, it is fairly common that
-individual numbers are known by a name rather than an index value.  Due to this,
-R has a fairly simple way of giving the entries of a vector descriptive names
-in addition to numerical indices using the _names()_ function.  This function
-is different than functions that we have seen so far because it is really
-just a way of accessing a special property of your vector.  Be careful when you
-combine named vectors, as the names may change in ways that you do not expect.
+When raw data is imported to R from an outside source, it is fairly common that individual numbers are known by a name rather than an index value.  Due to this, R has a fairly simple way of giving the entries of a vector descriptive names in addition to numerical indices using the `names()` function. This function is different than functions that we have seen so far because it is really just a way of accessing a special property of your vector. Be careful when you combine named vectors, as the names may change in ways that you do not expect.
 
 
 
@@ -219,11 +152,7 @@ x + 1:3
 x + 1:6
 ```
 
-By default, R records that the names of the entries of your vector are NULL,
-meaning that they do not exist.  If you name one of the entries, R will decide
-that the others should be given names that are NA, meaning that they are
-unknown.  If you set the names of your vector to NULL, then R goes back to
-believing that the vector's entries should have no names.
+By default, R records that the names of the entries of your vector are `NULL`, meaning that they do not exist. If you name one of the entries, R will decide that the others should be given names that are `NA`, meaning that they are unknown.  If you set the names of your vector to `NULL`, then R goes back to believing that the vector's entries should have no names.  Again, this is the different between having names that are unknown, and names that are known to not exist.
 
 ```{r}
 x <- c(1, 5, 7); x
@@ -231,8 +160,7 @@ names(x) <- c("A", "B", "C"); x
 names(x) <- NULL;x
 ```
 
-Once entries are named, you can pull them out by using those names just like
-you did with indices
+Once entries are named, you can pull them out by using those names just like you did with indices
 
 ```{r}
 x <- c(1, 5, 7); x
@@ -243,27 +171,23 @@ x[c(3, 1)]
 ```
 
 # Exercises.
-1.  Experiment with the rep() function on vectors of various lengths.  Notice
-the use of kwargs; what happens if you remove some of these arguments or change
-the values?
+
+1.  Experiment with the `rep()` function on vectors of various lengths. Notice the use of kwargs; what happens if you remove some of these arguments or change the values?
 
 ```{r}
 rep(c(1, 5, 7), times=2, length.out=5, each=2)
 
-
 ```
 
-2.  I want to create the following vector, but I want to do it using the :
-operation to ensure that I have an easier time later if I want to make a similar
-vector, only much longer.  How can I do this?
+2.  I want to create the following vector, but I want to do it using the `:` operation to ensure that I have an easier time later if I want to make a similar vector, only much longer. How can I do this?
 
 ```{r}
 x <- c(500, 700, 900, 1100, 1300)
 ```
 
-3.  Given a positive integer _n_, how can I create a vector of all zeros with
-length _n_?  Try (at least) the following two different ways: using the colon
-operation and using the rep() function.
+3.  Given a positive integer `n`, how can I create a vector of all zeros with
+length `n`?  Try (at least) the following two different ways: using the `:`
+operation and using the `rep()` function.
 
-4.  What happens when you combine (using the c() function) a named vector and
+4.  What happens when you combine (using the `c()` function) a named vector and
 a vector with no names?
