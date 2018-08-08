@@ -6,15 +6,15 @@ output: html_notebook
 
 ### More automation
 
-Often in computations, the same operation needs to be repeated a number of times to complete a problem. In this situation, you are very fortunate if the same computer code can be reused for each such iteration, since there is usually a way to tell your computer to repeat the code until it is done. In R, this kind of repetition is typically done through loop structures. There are three main loop structures in R: the `for` loop, the `while` loop, and the `repeat` loop.
+Often in computation, the same operation needs to be repeated a number of times to complete a problem. In this situation, you are very fortunate if the same computer code can be reused for each iteration, since there is usually a way to tell your computer to repeat the code until it is done. In R, this kind of repetition is typically done through loop structures. There are three main loop structures in R: the `for` loop, the `while` loop, and the `repeat` loop.
 
 ### The `for` loop
 
-The safest form of loop to use is the `for` loop. For a `for` loop, you must first specify a vector or other list of values for R to iterate over. R will go through the list and perform your code one time for each entry on the list, in the order that you appear on the list. You are permitted to use whatever the current list element is in your calculation, as well.
+The safest form of loop to use is the `for` loop. For a `for` loop, you must first specify a vector or other list of values for R to iterate over (sometimes called the "iterator"). R will go through the list and perform your code one time for each entry on the list, in the order that they appear on the list. You are permitted to use whatever the current list element is in your calculation, as well.
 
-Note: don't alter this iterating list or vector within the `for` loop. It won't do anything useful in the R language, and it sets up a bad habit if you move on to certain other programming languages.
+**Note.**  Don't alter this iterating list or vector within the `for` loop. It won't do anything useful in the R language, and it sets up a bad habit if you move on to certain other programming languages, like Python, where changing this list can affect the behavior of the `for` loop.
 
-Here is an example `for` loop that runs a simple block of code 10 times to calculate compound interest.  For this code, I first some starting values, then run the loop, and finally have R give me the output I wanted.
+Here is an example `for` loop that runs a simple block of code 10 times to calculate compound interest. For this code, I first some starting values, then run the loop, and finally have R give me the output I want.
 
 ```{r}
 principal <- 1000
@@ -29,13 +29,15 @@ for (time in 1:num_periods) {
 print(amount)
 ```
 
-Since this code is more complicated than the code I have been giving you, I have switched over to a convetion often used in programming: descriptive names. When you see a quantity in a math problem, you usually want to give it a terse, one-letter name like `x`. This usually makes mathematical equations more readable.
+Since this code is more complicated than the code I have been giving you, I have switched over to a convention often used in programming: descriptive names. When you see a quantity in a math problem, you usually want to give it a terse, even one-letter name like `x`. This usually makes mathematical equations more readable, but there is a catch: what if you run out of letters?
 
-In this program, however, I have four different quantities to work with. I could give them short names, but that could spiral out of control very quickly if I have to do a problem with a large number of inputs. Fortunately, the computer does not mind having to work with somewhat longer names, so I can easily afford to tell it to use the entire word `principal` instead of just a single `P` like I might write on a sheet of paper..
+In this program, I have four different quantities to work with. I am in no danger of running out of letters, so I could very well give them one-letter names. But what if I want to include this code as part of a longer script? There could easily be a conflict in notation, and if not it could become difficult to remember what each individual letter is supposed to represent. If I have to do a problem with a large number of inputs, this could easily spiral out of control.
 
-A benefit to this convention is that now anyone looking at my code has a good chance of understanding what my intentions were when I wrote the code, which makes code maintenance less of a chore.
+Fortunately, R does not mind having to work with somewhat longer names, so I can easily afford to tell it to use the entire word `principal` instead of just a single `P` like I might write on a sheet of paper. If I later need to talk about some kind of probability (perhaps for a problem involving avariable interest rate), I will not have to worry about mistaking it for this loan principal.
 
-Now let's beef up that loop a little bit. This time, I am going to have the loop keep track of all of the intermediate balances before the final period as well as the final amount. I do this by changing `amount` into a matrix and then setting its entries to be the numbers I compute.
+A benefit to this convention is that now anyone looking at my code has a better chance of understanding what my intentions were when I wrote the code, which makes code maintenance less of a chore. It also helps make any kwargs I create more intuitive!
+
+Now let's beef up that loop a little bit. This time, I am going to have the loop keep track of all of the intermediate balances before the final period as well as the final amount. I do this by changing `amount` into a matrix and then setting its entries to be the numbers I compute. Since things are getting more complicated, I also include some comments in the code using `#`. R will ignore anything on a line following the `#` symbol when running code, provided that it isn't part of a character string.
 
 ```{r}
 # Initialization.
@@ -60,15 +62,15 @@ There is a lot going on in this code! The most important thing to notice, howeve
 
 ### Other loops
 
-I will now go over the other two kinds of loops that you can use in R. Unlike for loops, these constructs can easily create endlessly running programs. Please make sure to keep the following in mind:
+I will now go over the other two kinds of loops that you can use in R. Unlike `for` loops, these constructs can easily create endlessly running programs. Please make sure to keep the following in mind:
 
 **CAUTION: some of the following scripts may cause your interpreter to become locked into an unending loop.  Either use the `Esc` key or `Ctrl + C` when the `Console` pane has focus to tell R to stop execution.**
 
 #### The `while` loop
 
-When a `while` loop is made, it has some sort of condition attached to it. Before executing its code, R checks the condition.  If it is `TRUE`, then R executes the `while` statement's code block.If not, the block is skipped over. In some circumstances it is useful to have an operation that repeats until some condition is satisfied, instead of until a certain number of iterations have been completed.This is the situation in which a `while` loop is useful. 
+When a `while` loop is made, it has some sort of condition attached to it. Before executing its code, R checks the condition.  If it is `TRUE`, then R executes the `while` statement's code block. If not, the block is skipped over. In some circumstances it is useful to have an operation that repeats until some condition is satisfied, instead of until a certain number of iterations have been completed.This is the situation in which a `while` loop is useful. 
 
-Suppose that in the prior problem setup, I really want to calculate how many time periods it will take to have 2,000 in my account instead. Here is my plan: I will tell R to keep iterating until the balance is over 2,000. Once that is done, thenI will have R tell me the number of times it iterated. I am pretty sure that this will be done in a finite number of iterations, it's just that I don't know how many until I do some kind of calculation (much of this could be done by hand, too).
+Suppose that in the prior problem setup, I really want to calculate how many time periods it will take to have 2,000 in my account instead. Here is my plan: I will tell R to keep iterating until the balance is over 2,000. Once that is done, then I will have R tell me the number of times it iterated. I am pretty sure that this will be done in a finite number of iterations, it's just that I don't know how many until I do some kind of calculation (much of this could be done by hand, too).
 
 ```{r}
 principal <- 1000
@@ -103,23 +105,21 @@ cat("I will make", num_payments - 1, "payments of", payment,
     "Paying off this loan will take", num_payments/12, "years.\n")
 ```
 
-To present the data that came out of this calculation, I had R print out a
-summary message, using the `cat()` function to turn a sequence of character
-strings into a single string.
+To present the data that came out of this calculation, I had R print out a summary message, using the `cat()` function to turn a sequence of character strings into a single string.
 
-If you decide to change the numbers in this code, be very careful!  If the monthly payment for the loan is too low, then the loan will never be paid off and as such the code _will not stop on its own_.  A monthly payment of 600 won't cause a problem, but going a little bit below that will.
+If you decide to change the numbers in this code, be very careful!  If the monthly payment for the loan is too low, then the loan will never be paid off and as such the code _will not stop on its own_. A monthly payment of 600 won't cause a problem, but going a little bit below that will!
 
 #### The `repeat` loop
 
-A `repeat` loop functions as a `while`, except that there is no condition that makes a `repeat` loop stop.  That's right: `repeat` always makes infinite loops!  Fortunately, there are ways to tell a `repeat` loop that it is time to stop, which I will cover next.
+A `repeat` loop functions as a `while`, except that there is no condition that makes a `repeat` loop stop.  That's right: `repeat` always makes infinite loops! Fortunately, there are ways to tell a `repeat` loop that it is time to stop, which I will cover next.
 
 ### Loop-breaking statements
 
-In a loop, you may decide that there are circumstances under which the loop should stop early.  After all, if you have a `for` loop that is supposed to iterate 100 times to look for something, and it finds it after 3 iterations, then why would you want it to keep going?  R has two main ways to change the flow of a loop: `break` and `next`.
+In a loop, you may decide that there are circumstances under which the loop should stop early.  After all, if you have a `for` loop that is supposed to iterate 100 times to look for something, and it finds it after 3 iterations, then why would you want it to keep going? R has two main ways to change the flow of a loop: `break` and `next`.
 
 #### The `break` statement
 
-When R sees a 'break' statement, it immediately ends the last loop that it entered (especially relevant if you put a loop within another loop!). It you want to use repeat loops, the use of a `break` statement is **mandatory** if you want the loop to ever stop on its own. The following code uses the `repeat`-`break` construct.  Try to guess what it will do before you run it.
+When R sees a 'break' statement, it immediately ends the last loop that it entered (especially relevant if you put a loop within another loop!). It you want to use repeat loops, the use of a `break` statement (or something like it) is **mandatory** if you want the loop to ever stop on its own. The following code uses the `repeat`-`break` structure. Try to guess what it will do *before* you run it!
 
 ```{r}
 N = 0
@@ -135,7 +135,7 @@ repeat {
 
 #### The `next` statement
 
-When R sees a `next` statement, it immediately ends the current iteration of the last loop that it entered, and it moves on to the next iteration.This does not end the loop, but it does skip over any code in the loop that follows the statement.Try to determine what the following code will do before you run it.
+When R sees a `next` statement, it immediately ends the current iteration of the last loop that it entered, and it moves on to the next iteration. This does not (usually) end the loop, but it does skip over any code in the loop that follows the statement. Try to determine what the following code will do *before* you run it!
 
 ```{r}
 N = 0
@@ -154,7 +154,26 @@ repeat {
 
 # Exercises.
 
-1.  For the following vector `y`, return a vector `z` that has the same length, but, using an `if`-`else if`-`else` block and a `for` loop, make it so that:
+1.  Alter the following code from the example above to model what would happen if the loan payment each period occurs *before* interest is charged. Use this to compare the effect that this has on the total amount paid for the loan.
+
+```{r}
+num_payments <- 0
+owed <- 200000.00
+interest <- 0.003
+payment <- 2000
+
+while (owed > 0) {
+  owed <- owed * (1 + interest)
+  owed <- owed - payment
+  num_payments <- num_payments + 1
+}
+final_payment = payment + owed
+cat("I will make", num_payments - 1, "payments of", payment,
+    "with one final payment of", final_payment, ". ",
+    "Paying off this loan will take", num_payments/12, "years.\n")
+```
+
+2.  For the following vector `y`, return a vector `z` that has the same length, but, using an `if`-`else if`-`else` block and a `for` loop, make it so that:
 
     * every element that is greater than 1 is replaced by 1
 
@@ -164,7 +183,7 @@ repeat {
 
     * every other element is the same as the corresponding element of _y_
 
-    Then generate a new value for `y` using the expression given for `x` and verify that your formula still works. Did you like this method better than using logical relations directly? How about the `ifelse()` function? Which one produces code that is most readable?
+    Then generate a new value for `y` using the expression given for `x` and verify that your formula still works. Did you like this method better than using logical relations directly? How about the `ifelse()` function? Which one produces code that you find readable?
 
 ```{r}
 x <- trunc(100*runif(10,-2,2))/100
@@ -177,15 +196,14 @@ x
 z
 ```
 
+3.  Write a `for` loop that, given a numeric vector, returns the value of the least element. Do not use `min()` or any other function in your script.
 
-2.  Write a `for` loop that, given a numeric vector, returns the value of the least element.Do not use `min()` or any other function in your script.
-
-3.  Write a script that takes a numeric input `x` and repeatedly cuts it in half until the result is smaller than 10^-10^, returning this result after the appropriate number of halvings.  Do this in three different ways:
+4.  Write a script that takes a numeric input `x` and repeatedly cuts it in half until the result is smaller than 10^-10^, returning this result after the appropriate number of halvings. Do this in three different ways:
 
     * Using a `while` loop
 
     * Using a `repeat` loop with a `break` statement.
 
-    * Using a `for` loop with a break statement.  Make sure to loop over a vector that is long enough, but don't try to make it "infinitely long."
+    * Using a `for` loop with a break statement. Make sure to loop over a vector that is long enough, but don't try to make it "infinitely long."
 
-    * For a challenge, do this using no loops.  Logarithms will be helpful!
+    * For a challenge, do this using *no* loops. Logarithms will be helpful!

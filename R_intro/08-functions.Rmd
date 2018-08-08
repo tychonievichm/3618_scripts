@@ -6,7 +6,7 @@ output: html_notebook
 
 ### Even more automation
 
-The final method of controlling how a program executes that I will introduce is the function. A function in R is a sub-program within a script that you can run any time after the interpreter has been told about it.Though this may seem like a small addition to your tool kit, the ability to write functions gives you a great deal of power!Here is a simple example to get you started:
+The final method of controlling how a program executes that I will introduce is the function. A function in R is a sub-program within a script that you can run any time after the interpreter has been told about it. Though this may seem like a small addition to your tool kit, the ability to write functions gives you a great deal of power! Here is a simple example to get you started:
 
 ```{r}
 f <- function(x) {
@@ -38,7 +38,7 @@ Whenever you place the appropriate number of inputs in parentheses following you
 
 ### Self-reference
 
-With all of the power that the use of functions gives you, it's important to realize that they are also quite dangerous.  Here is an example of a function that involves recursion to reproduce the functionality of a while loop, with all of the associated issues:
+With all of the power that the use of functions gives you, it's important to realize that they are also quite dangerous. Here is an example of a function that involves recursion to reproduce the functionality of a while loop, with all of the associated issues:
 
 ```{r}
 danger <- function(x) {
@@ -51,7 +51,7 @@ danger <- function(x) {
 danger(0)
 ```
 
-This sort of thing could easily run away on you, so be very cautious if you decide to do it.  If you can manage, I recommend sticking with loops so that others can more easily see your intentions.
+This sort of thing could easily run away on you, so be very cautious if you decide to do it! If you can manage, I recommend sticking with loops so that others can more easily see your intentions.
 
 ### The `Global Environment` and `remove()`
 
@@ -63,7 +63,7 @@ remove(good_name)
 remove(multiply)
 ```
 
-Even though R did not produce any output when those instructions were entered, you should see that those functions are no longer present in your `Global Environment`.  If you are wondering why you would ever want to do this, imagine that you accidentally tell R that it should make the value of `pi` exactly 3.
+Even though R did not produce any output when those instructions were entered, you should see that those functions are no longer present in your `Global Environment`. If you are wondering why you would ever want to do this, imagine that you accidentally tell R that it should make the value of `pi` exactly `3`.
 
 ```{r}
 pi
@@ -73,11 +73,11 @@ remove(pi)
 pi
 ```
 
-The `remove()` function actually restores the built-in definition for pi!
+It turns out that R still remembers the built-in definition pf `pi` even while giving precedence to your new definition. By using `remove()`, you effectively restore the built-in definition for `pi` by taking away the "higher priority" version. If this reminds you of some of the issues that came up when working with kwarg naming before, then good!
 
 ### Using `return()` and `stop()`
 
-A final note on function syntax: by default, R will return the last thing it sees in a function computation as that function's value.  If you want to be sure that the correct thing is being returned, then you can use `return()`. As soon as R is asked to run a return() statement within a function, it will stop execution of the function's code and return whatever is in the parentheses as the function's output:
+A final note on function syntax: by default, R will return the last thing it sees in a function computation as that function's value. If you want to be sure that the correct thing is being returned, then you can use `return()`. As soon as R is asked to run a `return()` statement within a function, it will stop execution of the function's code and return whatever is in the parentheses as the function's output:
 
 ```{r}
 f <- function(x) {
@@ -102,11 +102,24 @@ f(2)
 f(6)
 ```
 
-STOP STATEMENT EXAMPLE
+The `stop()` statement also stops execution of a function. Unlike `return()` stop halts the execution of the entire script, and prints out an error message instead of returning a value. Look at what happens when I put `stop()` in place of the first `return()` in the last function definition:
 
+```{r}
+f <- function(x) {
+  if (x > 5) {
+    stop(x^2)
+  }
+  return(x^3)
 
+}
+x <- f(4)
+x
+x <- f(6)
+print("What happened?")
+x
+```
 
-
+`stop()` is very useful for at least the following reason: when a program goes wrong, it is better for it to shut down entirely than to return bad information.  Later, I'll show you how to "catch" an error message like the ones that `stop()` produces and get your script to recover more gracefully.
 
 
 ### Scoping and local functions
@@ -144,13 +157,15 @@ f(0)
 
 This function knew the global value of `t` and used it until it was given a new value in the function's local workspace. After the function was done, the local value went away, and the global value again became the only one that R uses. When the function executed the second time, it had to go back to the original globally defined value!
 
-If a function is defined within the defing code of another function, then it is called a local function.  Each local functions has its own workspace, and it treats it's containing function's workspace as a sort of "extra"" global workspace. It can still access the "true"" global workspace, just at a lower priority. How functions that are called in other functions access variables is determined by the method that R uses for something called "scoping". R happens to use a method for scoping called "lexical scoping", which means that everything is determined by _where the function was defined_ and not _where it is being used_. If you want to use a function within another function and have it access that function's workspace, it has to be a local function.
+If a function is defined within the defing code of another function, then it is called a local function.  Each local functions has its own workspace, and it treats it's containing function's workspace as a sort of "extra"" global workspace. It can still access the "true" global workspace, just at a lower priority. How functions that are called in other functions access variables is determined by the method that R uses for something called "scoping". R happens to use a method for scoping called "lexical scoping", which means that everything is determined by _where the function was defined_ and not _where it is being used_. If you want to use a function within another function and have it access that function's workspace, it has to be a local function. The following diagram summarizes R's normal behavior:
 
-That said, the safest way to have one function access another function's computations is by explicitly passing everything that you care about as function arguments and never referring to variables within a function definition that the function isn't given explicitly. This approach makes your R functions behave much more like mathematical functions: given the same inputs, they will always return the same outputs. This way of doing things is often known as "the functional programming paradigm." *It is not always possible to adhere to this paradigm in R.*
+global $\rightarrow$ loaded packages $\rightarrow$ base R $\rightarrow$ outermost function $\rightarrow$ $\cdots$ $\rightarrow$ next function out $\rightarrow$ current function
+
+It is even possible to break this order if you really want! That said, the safest way to have one function access another function's computations is by explicitly passing everything that you care about as function arguments and never referring to variables within a function definition that the function isn't given explicitly. This approach makes your R functions behave much more like mathematical functions: given the same inputs, they will always return the same outputs. This way of doing things is often known as "the functional programming paradigm." *It is not always possible to adhere to this paradigm in R.*
 
 # Exercises.
 
-1.  Redefine the exponential function `exp()` to be something else, and verify that you succeeded in doing so so.  Then remove your new definition from the `Global Environment` and verify that the old exponential function is back.
+1.  Redefine the exponential function `exp()` to be something else, and verify that you succeeded in doing so so. Then remove your new definition from the `Global Environment` and verify that the old exponential function is back.
 
 2.  What precisely is wrong with the following version of the multiply()` function?
 
@@ -162,7 +177,7 @@ multiply <- function(x, y) {
 }
 ```
 
-3.  Explain how to replace any and all instances of loops with recursion. Then explain why doing this replacement might not be a good idea. In what situation might recursion be a very good idea?
+3.  Explain how to replace any and all instances of loops with recursion. Explain why doing this replacement might not be a good idea. Can you think of a situation where recursion would work better than a loop structure?
 
 4.  Explain what the following script *will* do, then run it to verify:
 

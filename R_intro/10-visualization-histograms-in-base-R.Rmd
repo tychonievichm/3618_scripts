@@ -1,0 +1,10 @@
+---
+title: "10 - Visualization: Histograms in Base R"
+author: "Michael Tychonievich, Ph.D."
+output: html_notebook
+---
+
+When compiling or analyzing data, it is important to have a good way to view different aspects of the data. You've already seen how to construct rudimentary tables using matrices, so not it is time to work on graphics. The first graphic I'll look at is the histogram.
+
+# Exercises.
+

@@ -4,12 +4,7 @@ author: "Michael Tychonievich, Ph.D."
 output: html_notebook
 ---
 
-Let's revisit the mortgage payment example from the loops notebook.  I am to
-expand upon the script we examined there to get it to generate some data that
-I might be interested in.  Please note that most of what I will show you in this
-notebook will be the style that I personally follow: you can certainly decide to
-do things in a different way.
-
+Let's revisit the mortgage payment example from the loops notebook. I am to expand upon the script we examined there to get it to generate some data that I might be interested in. Please note that most of what I will show you in this notebook will be the style that I personally follow: you can certainly decide to do things in a different way. I will also not talk about "debugging" just yet.
 
 Here is the old script:
 
@@ -30,23 +25,13 @@ cat("I will make", num_payments - 1, "payments of", payment,
     "Paying off this loan will take", num_payments/12, "years.\n")
 ```
 
-I would like to compare the time it takes to pay off the loan for many different
-payment sizes, preferably with some kind of nice-looking printout.  I will start
-by making the script into a function.  First, I will clear
-out the global environment so that I will notice if I forget to account for any
-of the many variables involved.
+I would like to compare the time it takes to pay off the loan for many different payment sizes, preferably with some kind of nice-looking printout. I will start by making the script into a function. First, I will clear out the global environment so that I will notice if I forget to account for any of the many variables involved.
 
 ```{r}
 remove(list=ls())
 ```
 
-Now I will write the function.  It is going to need three inputs:
-_owed_, _interest_, and _payment_.  I will go ahead and make these the arguments
-of the function.  The variable *num_payments* will still be important in my
-computation, but it looks more like a variable that the function itself must
-determine.  That means that it should be a local variable instead of an input
-argument.  Since my new goals do not involve having the report made in the
-last step, I will also remove that.  
+Now I will write the function. It is going to need three inputs: `owed`, `interest`, and `payment`.  I will go ahead and make these the arguments of the function.  The variable `num_payments` will still be important in my computation, but it is a variable that the function itself must determine. That tells me that it should be a local variable instead of an input argument. Since my new goals do not involve having a summary print out after the script runs, I will also remove that part of the script.
 
 ```{r}
 payments <- function(payment=2000, interest=0.003, owed=200000){
@@ -64,19 +49,10 @@ payments(interest=.004)
 payments(1500)
 ```
 
-Notice that the function takes its arguements in the order
-*(payment, interest, owed)*.  Deciding this was completely arbitrary on my part,
-and that means that this function could be difficult to work with.  To improve
-upon this, I made all of the input arguments into keyword arguments with some default values.  If
-someone knows how I named the different quantities in my function, they can set
-those quantities using my names instead of just relying on the order of inputs
-to determine how arguments are set.  This is a definite break with how
-mathematical notation works, but it can be very handy when lots and lots of
-functions are floating around at the same time.  If no input is given for an
-argument, then R will automatically put in my default value.
+Notice that the function takes its arguements in the order `(payment, interest, owed)`. My decision to do it this way this was completely arbitrary on my part,
+and that means that this function could be difficult to work with if someone is used to things being ordered differently. To improve upon this, I made all of the input arguments into keyword arguments with some default values. If someone knows how I named the different inputs to my function, they can set those quantities using my names instead of just relying on the order of inputs. This is a definite break with how mathematical notation works, but it can be very handy when lots and lots of functions are floating around at the same time. If no input is given for an argument, then R will automatically put in my default value.
 
-Now I would like to make a table of values for this function for different
-values of the _payment_ input.  I do this with a for loop:
+Now I would like to make a table of values for this function for different values of the `payment` input  I do this with a `for` loop:
 
 ```{r}
 num_trials <- 10
@@ -86,31 +62,16 @@ col_2 <- matrix(0, nrow=num_trials)
 for (i in 1:num_trials) {
   payment = 1000 + 100*i
   col_1[i] = payment
-  col_2[i] <- payments(payment=payment)  # This is weird!
+  col_2[i] <- payments(payment=payment)  # Remember this?
 }
 T <- cbind(col_1, col_2)
 colnames(T) <- c("payment",".003")
 T
 ```
 
-As I mentioned when I first covered kwargs, it sometimes happens that a global
-variable and a keyword argument for a function share the same name, in this case
-_payment_.  Because I set a default value for _payment_ within the payments()
-function, the function will always ignore the global value associated with
-_payment_ in favor of its own local value.  By writing "payment=payment" as an
-arguement, I am telling the function directly to use the current global value of
-_payment_ as the value it uses for its local variable, also named _payment_.
-Despite their names being the same, these two variables can easily refer to
-different things!
+As I mentioned when I first covered kwargs, it sometimes happens that a global variable and a keyword argument for a function share the same name, in this case `payment`. Because I set a default value for `payment` within the `payments()` function, the function will always ignore the global value associated with `payment` in favor of its own local value. By writing `payment=payment` as an argument, I am telling the function directly to use the current global value of `payment` as the value it uses for its local variable, also named `payment`. Despite their names being the same, these two variables can easily refer to completely different things! What would happen if I didn't give `payment` a default value and then neglected to include a value for it in my argument list?
 
-Now that I have a script to make a small table, I would like to increase the
-scale once again.  This time I will make a function that repeatedly makes and
-binds columns to the matrix I just made.  I will start this by reorganizing my
-code a little bit.  The changes I make here will only affect how the code
-carries out its computations: the output for a given list of inputs should
-remain the same as the earlier code.  The process of doing this is often known
-as "code refactoring".
-
+Now that I have a script to make a small table, I would like to increase the scale once again. This time I will make a function that repeatedly makes and binds columns to the matrix I just made.  I will start this by reorganizing my code a little bit. The changes I make here will only affect how the code carries out its computations: the output for a given list of inputs should remain the same as in my earlier code. The process of doing this is often known as "code refactoring".
 
 ```{r}
 num_trials <- 10
@@ -127,10 +88,7 @@ colnames(T) <- c("payment",".003")
 T
 ```
 
-This code does indeed give the same output as the earlier code, but it has an
-advantage: the calculation of *col_1* happens outside of the loop for
-calculating *col_2*, so I can more efficiently make new columns for my matrix.
-I'll do this with a new function:
+This code does indeed give the same output as the earlier code, but it has an advantage: the calculation of `col_1` happens outside of the loop for calculating `col_2`, so I can more efficiently make new columns for my matrix. After all, if I left it in, I might end up recalculating `col_1` every time I add a new column to the matrix! I'll do this with a new function:
 
 ```{r}
 num_trials <- 10
@@ -152,8 +110,7 @@ colnames(T) <- c("payment",".003")
 T
 ```
 
-Once again, this code gives me the same value for _T_, but now I have a simple
-way to attach more columns.
+Once again, this code gives me the same value for `T`, but now I have a simple way to attach more columns.
 
 ```{r}
 col_2 <- col_maker(.002, payment_sizes=col_1, num_trials=num_trials)
@@ -166,16 +123,11 @@ colnames(T) <- c("payment",".002",".003",".004",".005")
 T
 ```
 
-That is a much larger and more interesting table of values than what I had
-before!  What's more, if I later use a formula to speed up the calculation of
-the payments() function, I only have to mess around with that function to
-upgrade the entire script.
+That is a much larger and more interesting table of values than what I had before! What's more, if I later use a formula to speed up the calculation of the `payments()` function, I only have to mess around with that particular function to upgrade the entire script.
 
-Notice that R still lets me use keyword arguments in my function, even though I
-did not give a default value to announce that I wanted that to happen.  Again,
-this means that I can input arguments in a different order than what was
-given when the function was defined.  Just to summarize, I will now place the
-entire script below:
+Notice that R still lets me use keyword arguments in my function, even though I did not give a default value to announce that I wanted that to happen. Again, this means that I can input arguments in a different order than what was given when the function was defined.
+
+Before we continue, here is the entire script :
 
 ```{r}
 remove(list=ls())
@@ -210,12 +162,9 @@ T
 
 ```
 
-I used functions to automate the construction of these data sets, and then
-wrote out a list of very similar-looking commands to bind them up into a matrix
-for viewing.  If I am satisfied with this code, this is a good place to stop.
-But perhaps I would prefer to also automate the binding of columns.  That
-would make the construction of a 10-column table a bit more bearable.  Let's
-write a function to do this.  This time, I will use a vector of intest rates.
+I used functions to automate the construction of these data sets, and then wrote out a list of very similar-looking commands to bind them up into a matrix for viewing. This is actually a good place to stop, seeing as I successfully achieved my goal!
+
+Perhaps I would prefer to also automate the binding of columns. That would make the construction of a 10-column table a bit more bearable, after all. Let's write yet another function to do this! This time, I will use a vector of intest rates.
 
 ```{r}
 num_trials <- 10
@@ -233,8 +182,7 @@ make_payment_table <- function(interest_rates, num_trials, col_1) {
 make_payment_table(c(.002,.003,.004,.005), num_trials, col_1)
 ```
 
-That gets me my table with a single function call, so producing a large table
-just requires me to change a few parameters:
+That gets me my table with a single function call, so producing a large table just requires me to change a few parameters:
 
 ```{r}
 num_trials = 21
@@ -280,11 +228,7 @@ col_1 <- 100 * matrix(10:30, nrow=num_trials)
 make_payment_table(.0005*(1:10), num_trials, col_1)
 ```
 
-This is a fairly complicated script at this point: if I was to leave it like
-this and come back tomorrow, I might forget what each of the functions I wrote
-is supposed to do.  To help avoid that, I will alter the script by adding in
-some comments.  I do this at the start of every function, and every time I do
-something "clever."
+I like this script better now, but I have to admit: it is a fairly complicated script at this point. If I was to leave it like this and come back tomorrow, I might forget what each of the functions I wrote is supposed to do. Then I would have to do a significant amount of work to regain my understanding before altering anything.  To help avoid that, I alter the script by adding in some comments. I do this at the start of every function, and every time I do something "clever."
 
 ```{r}
 remove(list=ls())
@@ -344,83 +288,48 @@ col_1 <- 100 * matrix(10:30, nrow=num_trials)
 make_payment_table(.0005*(1:10), num_trials, col_1)
 ```
 
-That is much better, and as an added bonus other people who only get to see my
-script code will now have a much better chance of knowing what I was thinking
-when I wrote it!  This commenting also forced me to look back at my code.  There
-are definitely some issues that I saw that I might want to deal with.  None of
-these changes are required: after all, the program already does what I wanted
-it to do!  Because of this, it's not a bad idea for me to write down all of
-the _optional_ changes I might make to "improve"" it.  That way I can consider
-which improvements are worth my time, and which should be neglected.  It would
-also be a good time to set aside a backup copy of my code (if I haven't been
-doing that all along) in case I manage to break something in a way that I don't
-fully understand.  Here is my list of issues to consider:
+That is much better, and as an added bonus other people who only get to see my script code will now have a much better chance of knowing what I was thinking when I wrote it! This is especially important if I made an error and failed to write code that does what I want.
 
-* I used *col_1* as my name for the list of payment sizes I want to check in
-some places, and *payment_sizes* in others.  Could I use just one of those
-names?
+This commenting also forced me to look back at my code. There are definitely some issues that I saw that I might want to deal with. Since the code is perfectly function (I think!), none of these changes are *required*: after. Because of this, it's a really good idea for me to write down all of
+the *optional* changes I might make to "improve" it. That way I can consider which improvements are worth my time, and which should be neglected or put off. It would also be a good time to set aside a backup copy of my code (if I haven't been doing that all along) in case I manage to break something in a way that I don't fully understand. Here is my list of issues to consider:
 
-* I keep demanding that the length of the various columns gets passed from
-function to function, when I could have had each function recompute it using
-the length() function.  Should I have done this instead?
+* I used `col_1` as my name for the list of payment sizes I want to check in some places, and `payment_sizes` in others. Could I use just one of those names?
 
-* _T_ is not a very descriptive name for what I want out of that particular
-compilation of data.  Should I change it?
+* I keep demanding that the length of the various columns gets passed from function to function, when I could have had each function recompute it using the `length()` function on an as-needed basis. Should I have done this instead?
 
-* Sometimes I write my inputs using keywords and sometimes I don't.  Should I
-stick with one approach over the other?
+* `T` is not a very descriptive name for what I intend that particular matrix to represent. Should I change it?
 
-* I did not give the rows of the matrix _T_ any names.  Is that something I
-Should consider?
+* Sometimes I write my inputs using keywords with default values and sometimes I don't. Should I stick with one approach over the other?
 
-* I happen to know that creating a new column and binding it to a matrix causes
-R to make a new column and a new copy of the final matrix in my computer's
-memory every time I do it.  This might make my program slower than it needs to
-be; should I change the way new data is added to the matrix to avoid this?
+* I did not give the rows of the matrix `T` any names. Is that something I should consider?
 
-* Through the use of functions, I have effectively put a while loop inside of a
-for loop inside of another for loop.  This style of programming may prevent R
-from performing "parallel processing", exploiting the fact that my computer has
-multiple processor cores.  Should I try eliminate one of these loops?
+* I happen to know that creating a new column and binding it to a matrix causes R to make a new column and a new copy of the final matrix in my computer's memory every time I do it. This might make my program slower than it needs to be; should I change the way new data is added to the matrix to avoid this?
 
-* For certain combinations of interest rate and payment size, the loan under
-consideration will never be paid off.  Should I make my program act differently,
-perhaps returning a value of NA when that happens?  How can I tell if that is
-going to happen?
+* Through the use of functions, I have effectively put a `while` loop inside of a `for` loop inside of another `for` loop. This style of programming may prevent R from performing "parallel processing", exploiting the fact that my computer has multiple processor cores. Should I try eliminate one of these loops in favor of "vector operations"?
 
-* Should I put in default values for the arguments of more of my functions?
+* For certain combinations of interest rate and payment size, the loan under consideration will never be paid off. Should I make my program act differently, perhaps returning a value of NA when that happens?  How can I tell if that is going to happen?
 
-* The arguments that I used when I finally applied my functions at the end of
-the script involve using :.  Is there a better way for me to have these
-functions receive input?
+* The arguments that I used when I finally applied my functions at the end of the script involve using `:`. Is there a better way for me to have these functions receive input?
 
-As you can see, the list of issues I may want to address is already longer than
-the script itself!  It would be straightforward to just go through this list and
-make these changes, but it might be better for me in terms of productivity if I
-set some priorities.  I am going to prioritize those issues that are either
-quick to fix or could cause my program to break:
+As you can see, the list of issues I may want to address is already comparable in length to the script itself! It would be straightforward to just go through this list and make these changes, but it might be better for me in terms of productivity if I set some priorities.  I am going to prioritize those issues that are either quick to fix or could cause my program to break:
 
 #### Quick fixes:
 
-* Rename _T_ to *payment_table*
+* Rename `T` to `payment_table`
 
-* Rename col_1 *to payment_sizes*
+* Rename `col_1` `to payment_sizes`
 
-* Recompute length every time it is needed.
+* Recompute the length every time it is needed.
 
 #### Possible game-breaker:
 
-* Use a formula to calculate payment for a perpetuity, cut off calculations if
-the payment size involves is larger than the payment of a perpetuity.
-Alternatively, pick a big number and cut off anything that goes longer than
-that.  Maybe 1200 periods?
+* Cut off calculations if the payment size is not large enough to ever pay off the loan. I can use the formula for a perpetuity or just remember that the interest charged in the first period is the greatest amount of interest that will ever be charged. Alternatively, I could pick a big number and cut off the `while` loop if it runs more times that that number. Maybe 1200 periods?
 
 #### Skippable:
 
 * Skip optimization of loops since the program seems to run quickly enough.
 
-* Leave the input format for make_payment_table() alone for now, and revisit if
-it becomes an issue somehow.
+* Leave the input format for `make_payment_table()` alone for now, and revisit if it becomes an issue somehow.
 
 ```{r}
 remove(list=ls())
@@ -493,33 +402,16 @@ payment_sizes <- matrix(100*(10:30), nrow=num_trials)
 make_payment_table(interest_rates=.0005*(1:10), payment_sizes=payment_sizes)
 ```
 
-Now I feel like the script is done: I've got my table, the code is more
-readable, and I prevented the situation where the program runs forever in a way
-that isn't too disruptive, but that lets me know when it's triggered.  What
-else might I do to improve the script?
+Now I feel like the script is done: I've got my table, the code is more readable, and I prevented the situation where the program runs forever in a way that isn't too disruptive, but that lets me know when it's triggered. What else might I do to improve the script?
 
 # Exercises.
 
-1.  Rewrite the final script by typing out everything _by hand_: no copying and
-pasting.  You do not need to recopy the comments.  Go through your script and
-change all of the descriptive variable names to names that are single letters.
-Does this improve readability?  Check back in two weeks and ask yourself that
-question again.
+1.  When I ran the code `remove(list=ls())`, what exactly does `ls()` represent?
 
-2.  Improve the script by turning it into a single function, making each of the
-functions I wrote into local functions defined within its braces.  Make sure to
-indent everything an extra time to make it visually apparent that you've done
-this.
+2.  Rewrite the final script by typing out everything *by hand*: no copying and pasting. You do not need to recopy the comments. Go through your script and change all of the descriptive variable names to names that are single letters. Does this improve readability? Check back in two weeks and ask yourself that question again.
 
-3.  Improve this script in the following way: take as initial inputs the
-nominal interest rate per year and number of compoundings per year, and give 
-the time to pay off the loan in units of years instead of periods.  Label each
-column with the annual rate instead of the interest rate per period!  Change the
-payment size so that equal payments are made each period, and label each row
-with the payment size per "month."
+3.  Improve the script by turning it into a single function, making each of the functions I wrote into *local functions* defined within its braces. Make sure to indent everything an extra time to make it visually apparent that you've done this! What happens in the `Global Environment` when you clear it and then run this function?
 
-4.  There is a formula to calculate the number of payments needed to pay off the
-loan more directly.  Rewrite this script entirely to take advantage of this
-formula.  You should be able to do this with fewer than three loops by using
-vector and matrix operations.  It may help to review the different ways of
-rounding numbers in R.
+4.  Improve this script in the following way: take as initial inputs the nominal interest rate per year and number of compoundings per year, and give the time to pay off the loan in units of years instead of periods. Label each column with the annual rate instead of the interest rate per period!  Change the payment size so that equal payments are made each period, and label each row with the payment size per "month."
+
+5.  There is a formula to calculate the number of payments needed to pay off the loan more directly. Rewrite this script entirely to take advantage of this formula. You should be able to do this with fewer than three loops by using vector and matrix operations. It may help to review the different ways of rounding numbers in R.

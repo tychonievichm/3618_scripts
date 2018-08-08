@@ -112,7 +112,7 @@ For certain commonly requested slices, R has syntax to make the requests even fa
 5:2
 ```
 
-When the larger number is on the right, the colon function produces a vector of numbers that increase by 1 each time you move to the right, until doing so would exceed the larger number. If the larger number is on the right, the colon function does the same thing, but it decreases by 1 each time you move an entry to the right.  It works this way even if the numbers you give are not integers.
+When the larger number is on the right, the `:` function produces a vector of numbers that increase by 1 each time you move to the right, until doing so would exceed the larger number. If the larger number is on the right, the colon function does the same thing, but it decreases by 1 each time you move an entry to the right.  It works this way even if the numbers you give are not integers!
 
 ```{r}
 2.5:5.2
@@ -130,7 +130,7 @@ R has other ways of slicing up vectors that you may find useful. These include t
 
 ### Naming the entries of a vector
 
-When raw data is imported to R from an outside source, it is fairly common that individual numbers are known by a name rather than an index value.  Due to this, R has a fairly simple way of giving the entries of a vector descriptive names in addition to numerical indices using the `names()` function. This function is different than functions that we have seen so far because it is really just a way of accessing a special property of your vector. Be careful when you combine named vectors, as the names may change in ways that you do not expect.
+When raw data is imported to R from an outside source, it is fairly common that individual numbers are known by a name rather than an index value. Due to this, R has a fairly simple way of giving the entries of a vector descriptive names in addition to numerical indices using the `names()` function. This function is different than functions that we have seen so far because it is really just a way of accessing a special property of your vector. Be careful when you combine named vectors, as the names may change in ways that you do not expect.
 
 
 
@@ -185,9 +185,9 @@ rep(c(1, 5, 7), times=2, length.out=5, each=2)
 x <- c(500, 700, 900, 1100, 1300)
 ```
 
-3.  Given a positive integer `n`, how can I create a vector of all zeros with
-length `n`?  Try (at least) the following two different ways: using the `:`
-operation and using the `rep()` function.
+3.  Given a positive integer `n`, how can I create a vector of all zeros with length `n`?  Try (at least) the following two different ways: using the `:` operation and using the `rep()` function.
 
-4.  What happens when you combine (using the `c()` function) a named vector and
+4.  Try to print `1:10000` to the console.  What happens?  What do the `head()` and `tail()` functions do when given this vector?
+
+5.  What happens when you combine (using the `c()` function) a named vector and
 a vector with no names?

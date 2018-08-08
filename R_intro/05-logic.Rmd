@@ -12,14 +12,16 @@ Let's start by looking at how we can ask the computer to get the information it 
 
 ### Relations
 
-R has a number of "information-gathering" functions already built in. Some of these functions yield up information about single objects, while others look at how two or more objects relate to each other.  What these functions all have in common is that they can be thought of as functions that answer questions for which the only answers are something like "yes" and "no". As implemented, each of these functions will always give back one of two values: `TRUE` or `FALSE`, the two objects of class `logical`.  Here is an example:
+R has a number of "information-gathering" functions already built in. Some of these functions yield up information about single objects, while others look at how two or more objects relate to each other. What these functions all have in common is that they can be thought of as functions that answer questions for which the only answers are something like "yes" and "no". As implemented, each of these functions will always give back one of two values: `TRUE` or `FALSE`, the two objects of class `logical`. Here is an example:
 
 ```{r}
 x <- 5
 is.logical(x)
 ```
 
-In this example, I wanted to know something about the class of the number stored as `x`.  Instead of asking R to tell me the class, I just asked it to tell me if the class of x is "logical". There are many properties that you can access through `is`, but these properties may not be the ones you care about initially.  One of the worst offenders is `is.integer()`, which tells you whether or not a quantity has `integer` type, and not whether or not it is an integer in the mathematical sense.
+In this example, I wanted to know something about the class of the number stored as `x`. Instead of asking R to tell me the class, I just asked it to tell me if the class of x is `logical`. There are many properties that you can access through `is`, but these may not work exactly how you expect!
+
+An example of this is `is.integer()`. This tests whether or not an object has `integer` type. That is, it checks to see if the format the object uses to store data is a type that R considers as an `integer` type. It does not say anything about whether or not the object is an integer in the mathematical sense, and so you get the following:
 
 ```{r}
 x <- 5
@@ -28,7 +30,7 @@ is.integer(x)
 
 ### Numeric relations
 
-The relations that you are probably used to dealing with in math class are some special relations that compare the values or numbers, such as the relations of "equals" and "less than".  R has special Boolean functions devoted to just this sort of relation.
+The relations that you are probably used to dealing with in math class are some special relations that compare the values or numbers, such as the relations of "equals" and "less than". R has special Boolean functions devoted to just this sort of relation.
 
 #### Equations
 
@@ -41,7 +43,7 @@ To ask if two objects are equal, you can use the following syntax:
 "a" == "a"
 ```
 
-Notice that I had to use two "equals" signs to signify that I wanted a logical value.  If I had just put one equals sign, R would have thought I wanted to assign a value to one of the variables!  This produces an error when you ask to, say, assign the value `4` to `3`, but it may not give you an error if your equations involve variables!
+Notice that I had to use two "equals" signs to signify that I wanted a logical value. If I had just put one equals sign, R would have thought I wanted to assign a value to one of the variables!  This produces an error when you ask to, say, assign the value `4` to `3`, but it may not give you an error if your equations involve variables!
 
 To ask if two objects are *not* equal, use a single "equals" sign preceded by an exclamation point. Think of this as an attempt to draw a line through the "equals" sign.
 
@@ -54,7 +56,7 @@ To ask if two objects are *not* equal, use a single "equals" sign preceded by an
 
 #### Inequalities
 
-When working with numbers, you will often want to say when one of a pair of numbers is larger.  You can do this using the usual inequality symbols: `<` (less than)
+When working with numbers, you will often want to say when one of a pair of numbers is larger. You can do this using the usual inequality symbols: `<` (less than)
 
 ```{r}
 5 < 5
@@ -86,7 +88,7 @@ and `>=` for "greater than or equal to"
 4 >= 5
 ```
 
-The general rule to remember here is that the "equals" symbol is involved in the syntax for a numeric comparison, it should be the second symbol.
+The general rule to remember here is that the "equals" symbol is involved in the syntax for a numeric comparison using "infix notation", it should be the *second symbol* in the infix operator.
 
 ### Boolean functions
 
@@ -102,8 +104,7 @@ colnames(truth_table) <- col_names
 truth_table
 ```
 
-As you can see, `P&Q` evaluates to `TRUE` exactly when both `P` and `Q` evaluate to
-`TRUE`, so you can use the "and" function to tell when two different conditions are satisfied.You can also string together applications of "and" to create more complicated conditions.
+As you can see, `P&Q` evaluates to `TRUE` exactly when both `P` and `Q` evaluate to `TRUE`, so you can use the "and" function to tell when two different conditions are satisfied. You can also string together applications of "and" to create more complicated conditions.
 
 ```{r}
 TRUE & TRUE & TRUE & TRUE
@@ -111,9 +112,9 @@ TRUE & TRUE & TRUE & TRUE
 
 #### With vectors and matrices
 
-With some effort, logical expressions can be used in place of indices when slicing up vectors and matrices. This can actually make your code much simpler once you get used to how it works, though at first it can be quite challenging.  This method relies on two facts about how R deals with typical relations and Boolean functions.  
+With some effort, logical expressions can be used in place of indices when slicing up vectors and matrices. This can actually make your code much simpler once you get used to how it works, though at first it can be quite challenging. This method relies on two facts about how R deals with typical relations and Boolean functions.  
 
-First, many times when R is asked to perform a comparison on a vector or matrix, it will do it entry by entry instead of for the entire vector at matrix at once.  Then the output will come back as a matrix or vector of the same shape as the one you were working with originally.  This works a lot of the time, but you should check if you ever start working with new relations.
+First, many times when R is asked to perform a comparison on a vector or matrix, it will do it entry by entry instead of for the entire vector at matrix at once. Then the output will come back as a matrix or vector of the same shape as the one you were working with originally. But always test this when you start using a new comparison or property, especially if you get it from a third party library.
 
 ```{r}
 x <- c(2, 5, 8, 1)
@@ -122,7 +123,7 @@ A <- matrix(x, nrow=2)
 A > 3
 ```
 
-Second, when a logical vector or matrix is used in place of indices, R will hand back a vector of things that show up in the same places as any `TRUE` values in the logical vector or matrix.  The logical vector or matrix used should be the same size as the vector or matrix you are using it with to make this work well.
+Second, when a logical vector or matrix is used in place of indices, R will hand back a vector of things that show up in the same places as any `TRUE` values in the logical vector or matrix. The logical vector or matrix used should be the same size as the vector or matrix you are using it with to make this work well.
 
 ```{r}
 x <- c(2, 5, 8, 1)
@@ -134,7 +135,7 @@ A[L]
 
 Notice again that the output here was a vector in both cases, so this method of pulling elements out of a matrix does not naturally give you a matrix of any sort, let alone one with whatever size you need.
 
-If your goal is to get a matrix back, perhaps with some of the entries removed, you have to be a little clever.  Because R will coerce `TRUE` to the numeric value `1` and `FALSE` to the numeric value `0` if you attempt to treat logical values as numeric values, you can use multiplication by logicals as a way to "slice" a vector or matrix.
+If your goal is to get a matrix back, perhaps with some of the entries changed, you have to be a little bit clever. Because R will coerce `TRUE` to the numeric value `1` and `FALSE` to the numeric value `0` if you attempt to treat logical values as numeric values, you can use multiplication by logicals as a way to "slice" a vector or matrix.
 
 ```{r}
 x <- c(2, 5, 8, 1)
@@ -156,7 +157,7 @@ A[A <= 2]
 A * (A <= 2)
 ```
 
-Note.  If you want to think about this in terms of probability theory, you can interpret the logical matrix `A > 0` as a sort of "indicator function" for the event $\{(i, j) : A_{(i, j)} > 0\}$.  By this I mean that `(A > 0)[i, j] == 1` if and only if `A[i, j]> 0`, and `(A > 0)[i, j] == 0` otherwise.
+**Note.**  If you want to think about this in terms of probability theory, you can interpret the logical matrix `A > 0` as a sort of "indicator function" for the event $\{(i, j) : A_{(i, j)} > 0\}$.  By this I mean that `(A > 0)[i, j] == 1` if and only if `A[i, j]> 0`, and `(A > 0)[i, j] == 0` otherwise.
 
 #### Other usage
 
@@ -174,11 +175,17 @@ B[L, L]
 
 #### "Short-circuited" Boolean functions
 
-When the time comes for you to take an R program and make it run more efficiently, it's good to know that there are special Boolean functions designed for this purpose, namely `&&` and `||`.  These functions are very similar to the "and" and "or" functions, but they can decrease the total number of function evaluations needed in a complicated logical expression.  On the downside, they do not work with vectors and matrices the same way as "and" and "or" do.  We won't be needing these for this course.
+When the time comes for you to take an R program and make it run more efficiently, it's good to know that there are special Boolean functions designed for this purpose, namely `&&` and `||`.  These functions are very similar to the "and" and "or" functions, but they can decrease the total number of function evaluations needed in a complicated logical expression. On the downside, they do not work with vectors and matrices the same way as "and" and "or" do. I will avoid using these.
 
 # Exercises.
 
-1.  When doing numerical computations, it is common for a bit of rounding error to creep in.In fact, you should always expect that `x == y` is not going to tell you if two computed values are really equal.  A replacement forthis is `isTRUE(all.equal(x, y))`, which tells you if `x` and `y` are "close." If `x` is the number `1`, then how close does `y` need to be for this to return the value `TRUE`?
+1.  Write a line of code using `%%` that will return `TRUE` if a *number* `x` is an integer in the mathematical sense, and `FALSE` if the number is not an integer.  You need only be concerned with how the code handles individual numbers.
+
+```{r}
+x <- 5
+```
+
+2.  When doing numerical computations, it is common for a bit of rounding error to creep in. In fact, you should **always** expect that `x == y` is not going to tell you if two **computed** `numeric` values are really equal. Instead you can use `isTRUE(all.equal(x, y))`, which tells you if `x` and `y` are "close," which (hopefully) makes it so that computational rounding error doesn't get in your way. If `x` is the number `1`, then how close does `y` need to be for this to return the value `TRUE`?
 
 ```{r}
 x <- 1
@@ -188,8 +195,8 @@ z <- 1 + 10^-15
 isTRUE(all.equal(x, z))
 ```
 
-2.  For the following vector `y`, return a vector `z` that has the same length, but,
-using numeric relations on `y`, make it so that:
+3.  For the following vector `y`, return a vector `z` that has the same length, but,
+using *numeric relations* on `y` in the clever way I described above, make it so that:
 
     + every element that is greater than 1 is replaced by 1
 
@@ -212,18 +219,18 @@ x
 z
 ```
 
-3.  Extend the truth table example from above to handle the other three Boolean functions I introduced.  I've rewritten the code below to take advantage of the vectorized nature of these functions.  Do you find this code to be more readable?
+4.  Extend the truth table example from above to handle the other three Boolean functions I introduced.  I've rewritten the code below to take advantage of the vectorized nature of these functions.  Do you find this code to be more readable?
 
 ```{r}
 P <- c(TRUE, TRUE, FALSE, FALSE)
 Q <- c(TRUE, FALSE, TRUE, FALSE)
-test <- P&Q
+test <- P & Q
 truth_table <- matrix(c(P, Q, test), ncol=3)
-colnames(truth_table) <- c("P", "Q", "P&Q")
+colnames(truth_table) <- c("P", "Q", "P & Q")
 truth_table
 ```
 
-4.  Really look at this example, and write brief comments to explain why you should have expected each of the outputs that you got.
+5.  Really look at this example, and write brief comments to explain why you should have expected each of the outputs that you got.  Try it again with a different `logical` vector to make sure your explanations still work!
 
 ```{r}
 B <- matrix(26:50, nrow=5)

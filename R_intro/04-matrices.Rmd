@@ -8,25 +8,26 @@ output: html_notebook
 
 Often it is useful to have numerical data arranged in "spreadsheet" format instead of as a linear list. The most primitive way of doing this in R is by recording the data in a matrix. A matrix in R is essentially a vector with extra information indicating how data is to be organized into rows and columns.
 
-**CAUTION: All numbers in a single matrix must be of the same type!** If you place data of different types in the same matrix, then all entries will be coerced into the most general data type present, just like with standard vectors. As with vectors, this usually won't be a problem, but beware placing a character string in a vector
-with numbers! The simplest way to form a matrix from numbers that you happen to have lying around is to use the `matrix()` functionon a vector.This function is a bit more complicated to use than `c()`, so it's a good idea to read some of R's internal documentation.
+**CAUTION: All numbers in a single matrix must be of the same type!** If you place data of different types in the same matrix, then all entries will be coerced into the most general data type present, just like with standard vectors. As with vectors, this usually won't be a problem, but beware placing a character string in a matrix with numbers!
+
+The simplest way to form a matrix from numbers that you happen to have lying around is to use the `matrix()` function on a vector. This function is a bit more complicated to use than `c()`, so it's a good idea to read some of R's internal documentation. A way to access this documentation is by using `?`:
 
 ```{r}
 ?matrix
 ```
 
-There are three different functions listed in the file, and the one you want is the first one that creates a matrix from given values.If you just use the matrix function on a vector, it adds some structure to the vector.
+There are three different functions listed in this doc file, and the one you want is the first one, that creates a matrix from given values. Here's what happens if you just use the matrix function on a vector:
 
 ```{r}
 x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
 M_0 <- matrix(x);M_0
 ```
 
-Notice that the output here looks a lot like the vector `x`, but all of the entries are listed in a column rather than in a row.  Over in the `Environment` pane of RStudio, you can see how `M_0` is different.  After `x`, you see that R tells you that `x` is `num [1:10]`, to say that `x` has a `numeric` class and entries with indices 1 through 10.  After `M_0`, you see something similar: `num [1:10, 1]`.This tells you that `M_0` is has a `numeric` class, and that it is a rectangular array with 10 rows and 1 column.  When you make a matrix, you can actually set these numbers!
+Notice that the output here looks a lot like the vector `x`, but all of the entries are listed in a column rather than in a row.  Over in the `Environment` pane of RStudio, you can see ways in which `M_0` is different from `x`.  After `x` you can see `num [1:10]`.  This tells you that `x` is an array holding data of class `numeric`, and entries with indices 1 through 10.  After `M_0`, you see something similar: `num [1:10, 1]`.This tells you that `M_0` is an array holding data of `numeric` class, and that it has two dimensions.  The first dimension, telling you which row a piece of data is in, has entries with indices going from 1 to 10.  The second dimension, telling you which column a piece of data is in, just has one index value: 1.  This tells you that `M_0` is a single column or length 10.
 
-Under usage, we are told what information the `matrix()` function needs to form its output. All of the aruguments given are keyword arguments (kwargs) with default values given.
+Let's look at how to control the size and shape of a matrix created with `matrix()`.  Under usage, we are told what information the `matrix()` function needs to form its output. All of the aruguments given are keyword arguments (kwargs) with default values given.
 
-To form a matrix from data that we have using this function, we will need to know a few things: the data that we want to put in the matrix (this will be a numerical vector, for now), either a number of rows or columns to coerce the matrix to have, a decision about whether `byrow` should be `TRUE` or `FALSE` (this determines how the vector is written out in the matrix), and finally descriptive names for the row and column dimensions if needed. Let's make matrices from that vector that have different shapes by specifying the value of the keywords `nrow` and `ncol`:
+To form a matrix from data that we have using this function, we will need to know a few things: the data that we want to put in the matrix (this will be a numerical vector, for now), either a number of rows or columns to coerce the matrix to have, a decision about whether `byrow` should be `TRUE` or `FALSE` (this determines how the vector is written out in the matrix), and finally descriptive names for the row and column dimensions if needed. Let's make matrices from that vector that have different shapes by specifying the value of the keyword arguments `nrow` and `ncol`:
 
 ```{r}
 x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
@@ -34,8 +35,7 @@ M_1 <- matrix(x, nrow=2);M_1
 M_2 <- matrix(x, ncol=2);M_2
 ```
 
-Notice that specifying either the number of rows or the number of columns is
-enough to determine the matrix from a given input vector. As long as you want you vector to give you exactly the entries of your matrix, youneed not specify both (and you should not do it either, unless you have a good reason). Look at what happens if try to attach multiplie specifications:
+Notice that specifying either the number of rows or the number of columns is enough to determine the matrix created from a given input vector. As long as you want you vector to give you exactly the entries of your matrix, youneed not specify both (and you should not do it either, unless you have a good reason: see the exercise section for one such situation). Look at what happens if try to attach multiplie specifications:
 
 ```{r}
 x <- c(2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
@@ -53,7 +53,7 @@ M_6 <- matrix(x, ncol=2, byrow=TRUE);M_6
 
 ### Giving a matrix names
 
-Just like with a vector, you can add names to a matrix. There is a difference, however: the names are associated with the rows and columns of the matrix instead of the entries individually. Let's make a named matrix using the `dimnames` keyword argument. The documentation for the `matrix()` function says that `dimnames` has to be a list of length 2, which means that a list has to be defined!You can do this with the `list()` function.
+Just like with a vector, you can add names to a matrix. There is a difference, however: the names are associated with the rows and columns of the matrix instead of the entries individually. Let's make a named matrix using the `dimnames` keyword argument. The documentation for the `matrix()` function says that `dimnames` has to be a `list` of length 2, which means that an object of class `list` has to be defined! You can do this with the `list()` function.
 
 ```{r}
 rownames = c("monkey", "tiger")
@@ -63,13 +63,13 @@ animal <- matrix(c(2, 3, 60, 620), nrow=2, dimnames=dimnames)
 animal
 ```
 
-I did something a little bit strange there: I gave the list I wanted to use the same name as the keyword that was supposed to represent it. Despite this, R would not automatically grab my list and use it in the `matrix()` function: I had to explicitly tell it that my list was the correct one to use.  That's what I did when when I wrote `dimnames=dimnames` as my keyword argument: I told R to use the list that I named `dimnames` as the list used internally by the `matrix()` function, coincidentally also named `dimnames`. If I hand't done that, then R would have used the `matrix()` function's default internal value for `dimnames`, which is `NULL`. To reiterate: there were two different quantities with the name `dimnames`, and I had to tell R to reassign one of them to make them the same.I'll address this issue more as we continue, in particular when it comes time to work with functions. 
+I did something a little bit strange there: I gave the `list` I wanted to use the same name as the keyword that was supposed to represent it. Despite this, R would not automatically grab my list and use it in the `matrix()` function: I had to explicitly tell it that my list was the correct one to use.  That's what I did when when I wrote `dimnames=dimnames` as my keyword argument: I told R to use the list that I named `dimnames` as the list used internally by the `matrix()` function, coincidentally also named `dimnames`. If I hand't done that, then R would have used the `matrix()` function's default internal value for `dimnames`, which is `NULL`. To reiterate: there were two different quantities with the name `dimnames`, and I had to tell R to reassign one of them to make them the same. I'll address this issue more as we continue, in particular when it comes time to deal with how functions handle something known as "scoping". 
 
 ### Matrix "slicing"
 
 You can now create matrices from data, but there will be times when you want to get that data back out in pieces. Because matrices have more structure than vectors, it should make sense that there are more powerful ways of doing this.
 
-First, you can get a single entry out of a matrix.You can do this by using indices or names.When you ask for a single entry of a matrix, you should  typically give both an indication of which row and also which column you want the entry taken from.It turns out that R still thinks of the matrix as being a vector, to the point that you can still ask for and receive the entries of the matrix by using a single index number. Be careful with this!
+First, you can get a single entry out of a matrix. You can do this by using indices or names. When you ask for a single entry of a matrix, you should typically give both an indication of which row and also which column you want the entry taken from. It turns out that R still thinks of the matrix as being a vector, to the point that you can still ask for and receive the entries of the matrix by using a single index number. Be careful with this, as it means that a missed comma could cause unexpected results!
 
 
 ```{r}
@@ -78,7 +78,7 @@ animal[1, 2]
 animal["monkey", "weight"]
 ```
 
-You can specify multiple names or indices by using vectors of indices if you want to receive more information. The output may not be formatted exactly how you would expect, however. If you leave an index or name value blank, but you make sure to leave the correct number of commas in your specification, R will interpret the blank to mean "all possible values". This can be a great way to get entire rows or columns at once.
+You can specify multiple names or indices by using vectors of indices if you want to receive more information. The output may not be formatted exactly how you would expect, however. If you leave an index or name value blank, but you make sure to leave the correct number of commas in your specification, R will interpret the blank to mean "all possible values". This can be a great way to get entire rows or columns at once, but it also means that the presence of an extra comma could cause unexpected results!
 
 ```{r}
 animal[1, c(1, 2)]
@@ -90,7 +90,7 @@ animal[ , ]
 
 ### Tacking on rows or columns
 
-With vectors, you could combine two vectors one after tha other using the `c()` function. An analogue of this for matrices is tacking on an extra row or column to the matrix. The functions that do these oeprations are `cbind()` and `rbind()`.  Let's bind an extra column to the `animal` matrix and give it a name:
+With vectors, you can combine two vectors one after tha other using the `c()` function. An analogue of this for matrices is tacking on an extra row or column to the matrix. The functions that do these oeprations are `cbind()` and `rbind()`.  Let's bind an extra column to the `animal` matrix and give it a name:
 
 ```{r}
 animal <- cbind(animal, c(4,4))
@@ -113,7 +113,7 @@ animal <- rbind(animal, beetle=c(0.4, 0.003, 6))
 animal
 ```
 
-And now it turns out that I used the wrong number for beetle weight.To change it, I first have to figure out how to access that entry of the matrix individually. Here are the three ways I showed you to do that:
+And now it turns out that I used the wrong number for beetle weight. To change it, I first have to figure out how to access that entry of the matrix individually. Here are the three ways I showed you to do that:
 
 ```{r}
 animal["beetle", "weight"]
@@ -134,7 +134,7 @@ I used the row and column names to change the value in that entry, but you can s
 
 ### Matrix arithmetic
 
-Matrix arithmetic works similarly to vector arithmetic by default: arithmetic operations are entry-by-entry by default. If you want everything to go smoothly, make sure that the matrices you combine are the same size and expect that your names might get mangled a bit.
+Matrix arithmetic works similarly to vector arithmetic by default: arithmetic operations are entry-by-entry by default. If you want everything to go smoothly, make sure that the matrices you combine are the same size!  You can check the size of a matrix using `dim()`.
 
 ```{r}
 A <- matrix(1:4, nrow=2);A
@@ -147,7 +147,9 @@ A ^ B
 A %% B
 ```
 
-If you want to perform matrix multiplication or other operations that you saw in your linear algebra class, you will need to use other syntax.I won't cover any of that here.
+When you combine named matrices using these operations, you should expect that your names will get mangled a bit.
+
+**Note.** If you want to perform matrix multiplication or other operations that you saw in your linear algebra class, R will handle that using other syntax. I won't cover any of that here.
 
 # Exercises.
 
@@ -155,10 +157,10 @@ If you want to perform matrix multiplication or other operations that you saw in
 
 2.  What happens when you use the `rep()` function on a matrix?
 
-3.  What happens when you use `cbind()` and `rbind()` with two matrices instead of
-with a matrix and a vector?
+3.  What happens when you use `cbind()` and `rbind()` with two matrices instead of with a matrix and a vector?
 
-4.  What happens when you add matrices of different sizes?
+4.  What happens when you use `cbind()` and `rbind()`on two or more vectors?
 
-5.  Given numbers `n` and `m`, how can I create an `n` by `m` matrix of all
-zeros by using the `matrix()` function? This means that the matrix should have `n` rows and `m` columns.
+5.  What happens when you `add` matrices of different sizes?
+
+6.  Given numbers `n` and `m`, how can I create an `n` by `m` matrix of all zeros by using the `matrix()` function? To clarify, I mean that the matrix should have `n` rows and `m` columns.
